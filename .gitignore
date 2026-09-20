@@ -1,0 +1,40 @@
+/.local/
+/PROGRESS.md
+/art/references/*
+!/art/references/eyeball-xl-lineart-clean-reference.png
+/art/source/*.blend*
+/art/source/eyeball-xl-loadout-lineart*.svg
+/docs/WEAPON-INSPECTION.md
+/scripts/*
+!/scripts/Build-Prototype.ps1
+!/scripts/Prepare-Release.ps1
+!/scripts/Test-Source.ps1
+!/scripts/Publish-Release.ps1
+__pycache__/
+
+# Unity caches and machine-specific state.
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/.vs/
+/unity/*.csproj
+/unity/*.sln
+
+# Imported game placeholders, assemblies, and generated bundles stay local.
+**/_donotship/
+**/_donotship.meta
+*.dll
+*.pdb
+*.nobp
+/unity/Assets/Blueprinter/Mods/*/.prototype-receipt.json
+*.zip
+/unity/Assets/Blueprinter/Example/
+/unity/Assets/Blueprinter/Example.meta
+/unity/Assets/Blueprinter/Mods/155mmrailgun/
+/unity/Assets/Blueprinter/Mods/155mmrailgun.meta
+/unity/Assets/TextMesh Pro/
+/unity/Assets/TextMesh Pro.meta

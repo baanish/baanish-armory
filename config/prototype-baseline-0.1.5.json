@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "modVersion": "0.1.5",
+  "unityVersion": "2022.3.62f2",
+  "hashPolicy": "png-bytes;other-files-utf8-lf-no-bom",
+  "files": [
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory.meta",
+      "sha256": "b4bfe64cdf08417e83f26d2f70d7648b3b44bdb21f32abfebfe68d1b03dfe977"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_definition.asset",
+      "sha256": "664777d1921aba04aeb89a1ba0860feb1f158518a99f8945a22eb00267e8e176"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_definition.asset.meta",
+      "sha256": "08c040f551f6139ffa492e0472108d9dc4b9c88b5dfdc2753aefbfec2b1111fb"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_icon.png",
+      "sha256": "8e7c2a5767ecd4aea75d5555550a80844f2713e30cf29742b89d9b57c26c261b"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_icon.png.meta",
+      "sha256": "4f522460786ec63e660ae0db114d5d29b793a478455a8896881b575364f7ccd9"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_info.asset",
+      "sha256": "3b622dfa975d6b48d44c6caaba0354561b6b63c04b9d35a74b6740e83e42f1d1"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_info.asset.meta",
+      "sha256": "7c3bec7bee4eb454605232ba6df0d375f2da505852334ba4fd3ff70a399ba45c"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_mesh.asset",
+      "sha256": "5840a46fdc4aaae15a89cb3c828c30aea16608eaed09e340e37e50e4ed20376a"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_mesh.asset.meta",
+      "sha256": "4478bd18305bda3ce1273f7c803c019e64b577bcafb24093ac9ec0511a9f8621"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_single.asset",
+      "sha256": "5de25938c5dc0a96fdbdbb26e774852438e638321cea384bb41ca312d5c465bf"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_single.asset.meta",
+      "sha256": "15cf4d86ba7963ceee58bd51f35f89c11c8fa6d9ece4036fb93b5255632de18d"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_single.prefab",
+      "sha256": "ebe0de4c36d8a5f5d0a861a29a545ea6bf8548f9c0c5c43c94588f97bd9be3c0"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl_single.prefab.meta",
+      "sha256": "99c128d9a7402567e29921e3984f2c8330a6b1b6069cbe55d8d3b5f58b8157d5"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl.prefab",
+      "sha256": "8b6d3e224d437f87e35c4a89eb9c567c30df0938236f76a9eb5184be80100fae"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/baanish_eyeball_xl.prefab.meta",
+      "sha256": "94447c7c22ba66d08c0d6cd9daf93337241b6fb6d7bb8f1d13a5b6eedea1d228"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/modinfo.json",
+      "sha256": "4cc6d9a0dfa132a04dbb16eeb55db690a326029ba9ea610074c5cc4338116cc3"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/modinfo.json.meta",
+      "sha256": "43e185bda95a7c506f571e1887fd7df3f470cff04eae565ed1750af21bf149fd"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/OpAddWeaponToHardpoint.asset",
+      "sha256": "4b331364daba2419383264a6d006032cbd94a2367c69868a1c17d916ebbc2341"
+    },
+    {
+      "path": "unity/Assets/Blueprinter/Mods/baanish-armory/OpAddWeaponToHardpoint.asset.meta",
+      "sha256": "7109cae9230bbbd6ba3bade8a285cef069b1a2247a63d1f9f4564d824d501426"
+    }
+  ]
+}

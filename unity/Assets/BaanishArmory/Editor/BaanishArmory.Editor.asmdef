@@ -1,0 +1,6 @@
+{
+    "name": "BaanishArmory.Editor",
+    "rootNamespace": "BaanishArmory.Editor",
+    "references": ["Blueprinter.Editor"],
+    "includePlatforms": ["Editor"]
+}
