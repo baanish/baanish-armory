@@ -10,7 +10,8 @@ NOZZLE = 0.065  # how far the nozzle bell sticks out behind the body
 RADIUS = 0.045  # half the Kingpin's frontal area (127 mm body)
 
 NOZZLE_BELL = [(0.034, -NOZZLE), (0.029, -0.02), (0.028, 0.0)]
-NOZZLE_THROAT = [(0.031, -NOZZLE), (0.019, -0.03), (0.012, -0.008)]
+NOZZLE_THROAT = [(0.031, -NOZZLE + 0.001), (0.019, -0.03), (0.012, -0.008)]
+NOZZLE_LIP = [NOZZLE_BELL[0], NOZZLE_THROAT[0]]  # closes the exit rim between the bell and the throat
 BOATTAIL = [(0.028, 0.0), (0.038, 0.035), (RADIUS, 0.08)]
 
 # Body, back to front: dark fin section, motor band, a long bare-metal motor in five casings, joint,

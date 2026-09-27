@@ -20,7 +20,7 @@ from mathutils import Vector
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cycles_gpu import enable_cycles_gpu  # noqa: E402
 from lance_shape import (BOATTAIL, FIN_ROOT, FIN_SPAN, FIN_THICKNESS, FIN_TIP, LENGTH, NOZZLE,  # noqa: E402
-                         NOZZLE_BELL, NOZZLE_THROAT, RADIUS, TIP_LENGTH, TIP_Y, WINDOW_WIDTH, body_layout, ogive)
+                         NOZZLE_BELL, NOZZLE_LIP, NOZZLE_THROAT, RADIUS, TIP_LENGTH, TIP_Y, WINDOW_WIDTH, body_layout, ogive)
 from stock_assets import StockAssets, read_unity_mesh, uv_islands  # noqa: E402
 
 OUT, ASSETS = sys.argv[sys.argv.index("--") + 1:][:2]
@@ -179,6 +179,7 @@ def fin(index, root=FIN_ROOT, tip=FIN_TIP, span=FIN_SPAN, thickness=FIN_THICKNES
 # Motor end: an exposed nozzle bell with a dark throat, then a short boat-tail.
 # The body is built from its own tail at Y=0, then everything moves forward by NOZZLE so the exit sits at Y=0.
 lathe(NOZZLE_BELL, "nozzle")
+lathe(NOZZLE_LIP, "nozzle")
 lathe(NOZZLE_THROAT, "nozzle", flip=True)
 cap(NOZZLE_THROAT[-1][0], NOZZLE_THROAT[-1][1], "throat")
 lathe(BOATTAIL, "dark")

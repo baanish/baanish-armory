@@ -8,6 +8,7 @@ using System.Text;
 using Blueprinter;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BaanishArmory.Editor
 {
@@ -290,21 +291,15 @@ namespace BaanishArmory.Editor
                         serialized.FindProperty("armorProperties.fireTolerance").floatValue != 0.3f)
                         throw new InvalidDataException("Expected the Lance motor, fins, penetrator and GPO-500 fire armor.");
                     var burn = serialized.FindProperty("motors.Array.data[0].burnTime").floatValue;
-                    var systems = serialized.FindProperty("motors.Array.data[0].particleSystems");
-                    for (var i = 0; i < systems.arraySize; i++)
-                    {
-                        var main = ((ParticleSystem)systems.GetArrayElementAtIndex(i).objectReferenceValue).main;
-                        if (!main.loop && main.duration < burn)
-                            throw new InvalidDataException("A Lance motor effect stops before burnout.");
-                    }
-                    var sounds = serialized.FindProperty("motors.Array.data[0].audioSources");
-                    for (var i = 0; i < sounds.arraySize; i++)
-                        if (!((AudioSource)sounds.GetArrayElementAtIndex(i).objectReferenceValue).loop)
-                            throw new InvalidDataException("The Lance motor sound must loop until burnout.");
-                    var trails = serialized.FindProperty("motors.Array.data[0].trailEmitters");
-                    for (var i = 0; i < trails.arraySize; i++)
-                        if (new SerializedObject(trails.GetArrayElementAtIndex(i).objectReferenceValue).FindProperty("emitLifetime").floatValue < burn)
-                            throw new InvalidDataException("The Lance motor trail stops before burnout.");
+                    var effects = References<ParticleSystem>(serialized, "motors.Array.data[0].particleSystems");
+                    if (effects.Any(effect => !effect.main.loop && effect.main.duration < burn))
+                        throw new InvalidDataException("A Lance motor effect stops before burnout.");
+                    var sounds = References<AudioSource>(serialized, "motors.Array.data[0].audioSources");
+                    if (sounds.Count != 2 || sounds.Count(sound => sound.loop) != 1)
+                        throw new InvalidDataException("Expected the Lance motor's one-shot launch sound and a motor loop until burnout.");
+                    var trails = References<Object>(serialized, "motors.Array.data[0].trailEmitters");
+                    if (trails.Any(trail => new SerializedObject(trail).FindProperty("emitLifetime").floatValue < burn))
+                        throw new InvalidDataException("The Lance motor trail stops before burnout.");
                 }
                 if (type == "LaserSeeker")
                 {
@@ -321,11 +316,28 @@ namespace BaanishArmory.Editor
                 throw new InvalidDataException("Expected four physical Lance launchers per pod.");
             if (launchers.Any(launcher => new SerializedObject(launcher).FindProperty("railLength").floatValue < 3.92f))
                 throw new InvalidDataException("Each Lance must clear its 3.92 m tube before the flight round spawns.");
-            var podFilter = pod.GetComponentsInChildren<MeshFilter>(true)
-                .Single(filter => filter.sharedMesh == AssetDatabase.LoadAssetAtPath<Mesh>(ModFolder + "/baanish_agk4_lance_4pod_mesh.asset"));
-            var capsule = podFilter.GetComponent<CapsuleCollider>();
-            if (capsule == null || capsule.direction != 2 || Mathf.Abs(capsule.height - podFilter.sharedMesh.bounds.size.z) > 0.01f)
+            var podMesh = AssetDatabase.LoadAssetAtPath<Mesh>(ModFolder + "/baanish_agk4_lance_4pod_mesh.asset");
+            var podFilters = pod.GetComponentsInChildren<MeshFilter>(true).Where(filter => podMesh != null && filter.sharedMesh == podMesh).ToList();
+            if (podFilters.Count != 1)
+                throw new InvalidDataException("Expected one Lance pod model in its prefab.");
+            var length = podMesh.bounds.size.z;
+            var capsule = podFilters[0].GetComponent<CapsuleCollider>();
+            if (capsule == null || capsule.direction != 2 || Mathf.Abs(capsule.height - length) > 0.01f)
                 throw new InvalidDataException("The Lance pod collider must span the pod's length.");
+            var lod = pod.GetComponentInChildren<LODGroup>(true);
+            if (lod == null || Mathf.Abs(lod.size - length) > 0.01f)
+                throw new InvalidDataException("The Lance pod LOD group must measure the pod's length.");
+        }
+
+        // Every assigned object in a serialized reference array; a missing or mistyped entry is a broken asset.
+        private static List<T> References<T>(SerializedObject owner, string path) where T : Object
+        {
+            var array = owner.FindProperty(path) ?? throw new InvalidDataException("Missing field " + path);
+            var result = new List<T>();
+            for (var i = 0; i < array.arraySize; i++)
+                result.Add(array.GetArrayElementAtIndex(i).objectReferenceValue as T
+                    ?? throw new InvalidDataException("Unassigned or mistyped reference in " + path));
+            return result;
         }
 
         private static void ThrowBuildErrors(List<string> errors)

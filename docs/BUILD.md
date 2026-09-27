@@ -47,7 +47,7 @@ A Blueprinter `.source.zip` contains the mod assets for importing into another p
 
 ## Rebuild the AGK-4 Lance assets
 
-The Lance's model, pod, icon and stencil come from scripts in `art/source/lance`, and the Unity assets are authored from them. You only need this after changing the Lance's shape, art or stats. Blender 4.2 or later runs the model scripts; `EXPORT` is your AssetRipper `ExportedProject/Assets` directory.
+The Lance's model, pod, icon and stencil come from scripts in `art/source/lance`, and the Unity assets are authored from them. You only need this after changing the Lance's shape, art or stats. Blender 4.2 or later runs the model scripts, and Python 3 with Pillow (`pip install pillow`) runs the icon and stencil scripts. `EXPORT` is your AssetRipper `ExportedProject/Assets` directory.
 
 1. Build the model and its preview renders: `blender --background --factory-startup --python art/source/lance/build_lance.py -- <preview folder> <EXPORT>`.
 2. Export the Unity meshes: `blender --background --factory-startup <preview folder>/lance.blend --python art/source/lance/export_lance_meshes.py -- .local/lance-export <EXPORT>`.

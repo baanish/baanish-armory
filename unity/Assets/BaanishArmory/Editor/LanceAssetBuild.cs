@@ -201,6 +201,9 @@ namespace BaanishArmory.Editor
                 capsule.center = bounds.center;
                 capsule.height = bounds.size.z;
                 capsule.radius = Mathf.Max(bounds.size.x, bounds.size.y) / 2;
+                // The LOD group's size sets how far away the pod stays visible; it still measured the Kingpin pod.
+                var lod = root.GetComponentInChildren<LODGroup>(true) ?? throw new InvalidDataException("The pod has no LOD group.");
+                lod.size = bounds.size.z;
             });
             AuthorHardpointOp();
             AssetDatabase.SaveAssets();
@@ -282,17 +285,19 @@ namespace BaanishArmory.Editor
         }
 
         // The Kingpin's motor plays its 2.33 s launch clip once, which outlasts its 1.5 s burn but not the Lance's.
-        // A looping motor sound runs until burnout, which stops looping sources; the pod still plays the launch.
+        // Keep that one-shot for the launch and add a looping motor sound beside it; burnout stops looping sources.
         private static void LoopMotorSound(SerializedObject missile)
         {
             var sources = missile.FindProperty("motors.Array.data[0].audioSources");
-            var loop = Load<AudioClip>(Stock("AudioClip/rocket_fast_loop_PLACEHOLDER.ogg"));
-            for (var i = 0; i < sources.arraySize; i++)
-            {
-                var source = (AudioSource)sources.GetArrayElementAtIndex(i).objectReferenceValue;
-                source.clip = loop;
-                source.loop = true;
-            }
+            if (sources.arraySize != 1)
+                throw new InvalidDataException("Expected the Kingpin motor's single launch sound.");
+            var launch = (AudioSource)sources.GetArrayElementAtIndex(0).objectReferenceValue;
+            var loop = launch.gameObject.AddComponent<AudioSource>();
+            EditorUtility.CopySerialized(launch, loop);
+            loop.clip = Load<AudioClip>(Stock("AudioClip/rocket_fast_loop_PLACEHOLDER.ogg"));
+            loop.loop = true;
+            sources.arraySize = 2;
+            sources.GetArrayElementAtIndex(1).objectReferenceValue = loop;
         }
 
         private static void SetMaterials(GameObject root, Mesh mesh, params Material[] materials)
