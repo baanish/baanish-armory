@@ -10,6 +10,7 @@ config/game-asset-references.json
 config/prototype-baseline-0.1.5.json
 config/release-source-files.txt
 docs/BUILD.md
+docs/EW-POD-CONCEPT.md
 docs/INSTALL.md
 scripts/Build-Prototype.ps1
 scripts/Prepare-Release.ps1
