@@ -69,8 +69,12 @@ try {
         '--verify-tag', '--title', "baanish-armory $($modInfo.version)", '--notes-file', $notes, '--prerelease', '--draft') + $assets.FullName
     Invoke-ReleaseGh -Arguments $createArgs | Out-Host
     # Keep incomplete uploads in a draft; expose the release only after hash verification.
-    $uploaded = Invoke-ReleaseGh -Arguments @('api', "repos/$repoName/releases/tags/$tag") | ConvertFrom-Json
-    if (-not $uploaded.draft -or $uploaded.target_commitish -ne $commit -or $uploaded.assets.Count -ne $assets.Count) {
+    # The by-tag endpoint does not return drafts, so find the draft in the release list.
+    $drafts = @(Invoke-ReleaseGh -Arguments @('api', "repos/$repoName/releases?per_page=100") | ConvertFrom-Json |
+        Where-Object { $_.tag_name -eq $tag -and $_.draft })
+    if ($drafts.Count -ne 1) { throw "Expected one uploaded draft for $tag. Inspect the releases before retrying." }
+    $uploaded = $drafts[0]
+    if ($uploaded.target_commitish -ne $commit -or $uploaded.assets.Count -ne $assets.Count) {
         throw 'Uploaded draft does not match the local release. Inspect it before retrying.'
     }
     foreach ($file in $assets) {
@@ -83,7 +87,7 @@ try {
     Invoke-ReleaseGh -Arguments @('release', 'edit', $tag, '--repo', $repoName, '--draft=false') | Out-Host
     $published = Invoke-ReleaseGh -Arguments @('api', "repos/$repoName/releases/tags/$tag") | ConvertFrom-Json
     if ($published.draft -or -not $published.prerelease) { throw 'GitHub did not confirm the published prerelease.' }
-    Write-Host "Published prerelease: $($uploaded.html_url)"
+    Write-Host "Published prerelease: $($published.html_url)"
 } finally {
     Pop-Location
 }
