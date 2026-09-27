@@ -10,7 +10,7 @@ These steps use Nuclear Option Mod Manager (NOMM) 3.1.0. Install Nuclear Option 
 4. Refresh NOMM's Library. Check that there's one `baanish-armory` entry at version 0.2.0, then enable it. Leave Blueprinter enabled.
 5. Launch the game and check both weapons:
    - On the EW-25 Medusa, select **Outer Wing Pylons > Eyeball-XL**. You get two missiles at $2.5 million each.
-   - On the FS-20 Vortex, select **Inner wing pylons > AGK-4 Lance x4**. Each pod holds four rounds at $150,000 each. The [README](../README.md#agk-4-lance) lists every pylon that takes the pod.
+   - On the FS-20 Vortex, select **Inner wing pylons > AGK-4 Lance x4**. Each pod holds four rounds at $150,000 each. The [README](https://github.com/baanish/baanish-armory#agk-4-lance) lists every pylon that takes the pod.
 
 Keep only one installed copy. NOMM scans enabled, disabled and nested addon folders, and it may delete duplicate IDs when it refreshes. Keep backups outside those folders.
 

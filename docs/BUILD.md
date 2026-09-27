@@ -49,7 +49,12 @@ A Blueprinter `.source.zip` contains the mod assets for importing into another p
 
 Scripts in `art/source/lance` generate the Lance's model, pod, icon and stencil, and `LanceAssetBuild.cs` authors the Unity assets from them. You only need these steps after changing the Lance's shape, art or stats.
 
-You need Blender 4.2 or later on `PATH` for the model scripts, and Python 3 with Pillow (`pip install pillow`) for the icon and stencil scripts. In the commands below, `$export` is your AssetRipper `ExportedProject/Assets` directory and `$preview` is any scratch folder.
+You need Blender 4.2 or later on `PATH` for the model scripts, and Python 3 with Pillow (`pip install pillow`) for the icon and stencil scripts. Run the commands from the repository root in PowerShell, after pointing these two variables at your AssetRipper export and a scratch folder for the preview renders:
+
+```powershell
+$export = 'X:/AssetRipper/ExportedProject/Assets'
+$preview = '.local/lance-preview'
+```
 
 1. Build the model and render its previews:
    ```powershell
@@ -68,7 +73,7 @@ You need Blender 4.2 or later on `PATH` for the model scripts, and Python 3 with
    ```powershell
    & 'X:/Unity/2022.3.62f2/Editor/Unity.exe' -batchmode -quit -projectPath "$PWD/unity" -executeMethod BaanishArmory.Editor.LanceAssetBuild.Author
    ```
-5. Run `./scripts/Test-Source.ps1`. It names each authored file whose hash no longer matches `config/prototype-baseline-0.2.0.json`. Update those `sha256` values, hashing PNG files as raw bytes and every other file as UTF-8 text with LF line endings, then build.
+5. Run `./scripts/Test-Source.ps1`. It stops at the first authored file whose hash no longer matches `config/prototype-baseline-0.2.0.json`. Update that file's `sha256`, hashing PNG files as raw bytes and every other file as UTF-8 text with LF line endings, and rerun until the check passes. Then build.
 
 To review the result, `render_comparison.py` renders the Lance beside the stock AGRs and `render_vortex_loadout.py` renders it on an FS-20 Vortex. Both take the same arguments as step 2.
 
@@ -122,6 +127,6 @@ The XL's 12 km search setting isn't a measured detection radius, since target vi
 
 ## Validation scope
 
-The build checks asset hashes and imported game references. For both weapons it checks display names, costs, hardpoint registrations and encyclopedia entries. For the Lance it also checks the motor, penetrator, seeker, fire armor, effect and sound timing, launch rail, pod collider and LOD, materials and icon. Packaging checks the exported source and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
+The build checks asset hashes and imported game references. For both weapons it checks display names, costs, hardpoint registrations and encyclopedia entries. For the Lance it also checks the motor, penetrator, seeker and fire armor, that the flame and trail last the whole burn, that the motor has a one-shot launch sound and one loop, and the launch rail, pod collider and LOD, materials and icon. Packaging checks the exported source and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
 
 These checks catch missing dependencies and unintended asset changes, but they don't replace an in-game test. Bundle bytes and ZIP timestamps may differ between otherwise identical builds.

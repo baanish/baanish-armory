@@ -96,7 +96,7 @@ These points come from reading the game code.
 - Turn radius at full lift depends on mass divided by fin area, not on speed. Halving fin area doubles it: about 2.8 km at sea level, against 1.35 km for Kingpin. At three times the speed, it also has a third of the time to correct.
 - The HUD launch circle is `min(minAlignment, distance × 0.002)` degrees, so it's `minAlignment` beyond 4 km at stock and 2 km at 4°.
 - A longer burn keeps the plume visible about 3.4 times as long. While burning, the rocket's visual range grows by about 6.7 km.
-- Laser guidance leads the target using the weapon's listed max speed, so that field has to match the real top speed. The Lance lists 2,200 m/s, its peak from a subsonic jet.
+- Laser guidance leads the target using the weapon's listed max speed, so that field has to match the real top speed. The Lance lists 2,200 m/s, rounded from the 2,212 m/s subsonic-jet peak in the table above.
 - AI weapon choice uses armor tiers, and ships (tier 4 and 5) sit below tanks (tier 6). I can't keep AI from firing it at ships through tiers alone.
 
 ## Pod drag and RCS
