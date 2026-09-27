@@ -105,7 +105,7 @@ MonoBehaviour:
   RequestRearmLevel: 0.5
   Safety: 0
   railDirection: 0
-  railLength: 2
+  railLength: 3.92
   railSpeed: 20
   railDelay: 0
   deploySound: {fileID: 0}
@@ -222,7 +222,7 @@ MonoBehaviour:
   RequestRearmLevel: 0.5
   Safety: 0
   railDirection: 0
-  railLength: 2
+  railLength: 3.92
   railSpeed: 20
   railDelay: 0
   deploySound: {fileID: 0}
@@ -339,7 +339,7 @@ MonoBehaviour:
   RequestRearmLevel: 0.5
   Safety: 0
   railDirection: 0
-  railLength: 2
+  railLength: 3.92
   railSpeed: 20
   railDelay: 0
   deploySound: {fileID: 0}
@@ -725,7 +725,7 @@ MonoBehaviour:
   RequestRearmLevel: 0.5
   Safety: 0
   railDirection: 0
-  railLength: 2
+  railLength: 3.92
   railSpeed: 20
   railDelay: 0
   deploySound: {fileID: 0}

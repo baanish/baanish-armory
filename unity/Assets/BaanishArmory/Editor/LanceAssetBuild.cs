@@ -148,6 +148,7 @@ namespace BaanishArmory.Editor
                     if (type == "Missile")
                     {
                         StretchMotorEffects(so, so.FindProperty("motors.Array.data[0].burnTime").floatValue);
+                        LoopMotorSound(so);
                         Set(so, "motors.Array.data[0].thrust", Thrust);
                         Set(so, "motors.Array.data[0].burnTime", BurnTime);
                         Set(so, "motors.Array.data[0].fuelMass", FuelMass);
@@ -182,6 +183,13 @@ namespace BaanishArmory.Editor
                 {
                     var seat = root.transform.Find("pod/rocket" + (i + 1)) ?? throw new InvalidDataException("Missing pod seat rocket" + (i + 1));
                     seat.position = new Vector3(seats[i * 3], seats[i * 3 + 1], seats[i * 3 + 2]);
+                }
+                // Each round slides its own length along the rail before the flight round spawns, as the Kingpin does.
+                foreach (var launcher in root.GetComponentsInChildren<Component>(true).Where(c => c != null && c.GetType().FullName == "MountedMissile"))
+                {
+                    var so = new SerializedObject(launcher);
+                    Set(so, "railLength", Length);
+                    so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 SetMaterials(root, folded, body, optics);
                 SetMaterials(root, pod, body, stencil);
@@ -270,6 +278,20 @@ namespace BaanishArmory.Editor
                 var lifetime = trail.FindProperty("emitLifetime");
                 lifetime.floatValue += BurnTime - stockBurnTime;
                 trail.ApplyModifiedPropertiesWithoutUndo();
+            }
+        }
+
+        // The Kingpin's motor plays its 2.33 s launch clip once, which outlasts its 1.5 s burn but not the Lance's.
+        // A looping motor sound runs until burnout, which stops looping sources; the pod still plays the launch.
+        private static void LoopMotorSound(SerializedObject missile)
+        {
+            var sources = missile.FindProperty("motors.Array.data[0].audioSources");
+            var loop = Load<AudioClip>(Stock("AudioClip/rocket_fast_loop_PLACEHOLDER.ogg"));
+            for (var i = 0; i < sources.arraySize; i++)
+            {
+                var source = (AudioSource)sources.GetArrayElementAtIndex(i).objectReferenceValue;
+                source.clip = loop;
+                source.loop = true;
             }
         }
 

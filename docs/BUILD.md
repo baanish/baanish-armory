@@ -12,7 +12,7 @@ Keep the repository and export in plain local folders. Symlinks, junctions and O
 2. Export your game installation using **AssetRipper 2.0.0**, with Script Content Level **Level 1** and Script Export Format **Decompilation**. Keep the export path short enough for Unity's Windows path limit. Other versions have not been checked for compatible asset paths and object IDs.
 3. In Unity, open **Blueprinter > Project Setup**. Enter game version `0.34.2`.
 4. Choose **Import Game Assemblies** and select your `NuclearOption.exe`. Let Unity finish compilation and reload before continuing. Copying a generated `Packages/nuclearoption` directory into a fresh project does not replace this step.
-5. Use **Baanish Armory > Import game assets with stable references** and select the export's `ExportedProject/Assets` directory. This helper seeds the 27 game asset IDs required by the authored files before calling Blueprinter's importer. A plain Blueprinter import accepts new AssetRipper IDs, which do not match these files.
+5. Use **Baanish Armory > Import game assets with stable references** and select the export's `ExportedProject/Assets` directory. This helper seeds the 28 game asset IDs required by the authored files before calling Blueprinter's importer. A plain Blueprinter import accepts new AssetRipper IDs, which do not match these files.
 6. Import **TMP Essentials** when prompted, then choose **Refresh Op References**.
 
 Use this repository's Unity project. Its import helper and build script keep the mod's game references intact.
@@ -39,7 +39,7 @@ The build writes a timestamped directory under `.local/builds` with the `.nobp` 
 
 The baseline manifest pins the mod assets. If you change an asset, include its baseline update in the same change. Do not bypass validation to produce a release.
 
-Every build also verifies the 27 imported stock assets and 28 object references. Missing or remapped dependencies stop the build before it creates output, even when the authored files still match the baseline.
+Every build also verifies the 28 imported stock assets and 29 object references. Missing or remapped dependencies stop the build before it creates output, even when the authored files still match the baseline.
 
 A Blueprinter `.source.zip` contains the mod assets for importing into another prepared Blueprinter project. It is separate from the repository source archive, which includes this build code and documentation.
 

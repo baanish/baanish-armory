@@ -297,6 +297,10 @@ namespace BaanishArmory.Editor
                         if (!main.loop && main.duration < burn)
                             throw new InvalidDataException("A Lance motor effect stops before burnout.");
                     }
+                    var sounds = serialized.FindProperty("motors.Array.data[0].audioSources");
+                    for (var i = 0; i < sounds.arraySize; i++)
+                        if (!((AudioSource)sounds.GetArrayElementAtIndex(i).objectReferenceValue).loop)
+                            throw new InvalidDataException("The Lance motor sound must loop until burnout.");
                     var trails = serialized.FindProperty("motors.Array.data[0].trailEmitters");
                     for (var i = 0; i < trails.arraySize; i++)
                         if (new SerializedObject(trails.GetArrayElementAtIndex(i).objectReferenceValue).FindProperty("emitLifetime").floatValue < burn)
@@ -312,8 +316,11 @@ namespace BaanishArmory.Editor
             if (flights != 1 || seekers != 1)
                 throw new InvalidDataException("Expected one Lance missile and one laser seeker.");
             var pod = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/baanish_agk4_lance_4pod.prefab");
-            if (pod.GetComponentsInChildren<Component>(true).Count(component => component != null && component.GetType().FullName == "MountedMissile") != 4)
+            var launchers = pod.GetComponentsInChildren<Component>(true).Where(component => component != null && component.GetType().FullName == "MountedMissile").ToList();
+            if (launchers.Count != 4)
                 throw new InvalidDataException("Expected four physical Lance launchers per pod.");
+            if (launchers.Any(launcher => new SerializedObject(launcher).FindProperty("railLength").floatValue < 3.92f))
+                throw new InvalidDataException("Each Lance must clear its 3.92 m tube before the flight round spawns.");
             var podFilter = pod.GetComponentsInChildren<MeshFilter>(true)
                 .Single(filter => filter.sharedMesh == AssetDatabase.LoadAssetAtPath<Mesh>(ModFolder + "/baanish_agk4_lance_4pod_mesh.asset"));
             var capsule = podFilter.GetComponent<CapsuleCollider>();

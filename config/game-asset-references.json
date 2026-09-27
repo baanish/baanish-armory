@@ -16,6 +16,12 @@
       "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
     },
     {
+      "exportPath": "AudioClip/rocket_fast_loop.ogg",
+      "path": "AudioClip/rocket_fast_loop_PLACEHOLDER.ogg",
+      "guid": "fd5a5eebfb2d8a34cb01c0be6e3c015a",
+      "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
+    },
+    {
       "exportPath": "AudioClip/rocket_large_loop.ogg",
       "path": "AudioClip/rocket_large_loop_PLACEHOLDER.ogg",
       "guid": "4b3243e5d032671488d322758b7efea5",
