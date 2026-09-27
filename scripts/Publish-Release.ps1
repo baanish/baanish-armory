@@ -66,7 +66,7 @@ try {
         '-f', "ref=refs/tags/$tag", '-f', "sha=$commit") | ConvertFrom-Json
     if ($createdTag.object.sha -ne $commit) { throw 'GitHub did not create the expected release tag.' }
     $createArgs = @('release', 'create', $tag, '--repo', $repoName, '--target', $commit,
-        '--verify-tag', '--title', "Eyeball-XL $($modInfo.version)", '--notes-file', $notes, '--prerelease', '--draft') + $assets.FullName
+        '--verify-tag', '--title', "baanish-armory $($modInfo.version)", '--notes-file', $notes, '--prerelease', '--draft') + $assets.FullName
     Invoke-ReleaseGh -Arguments $createArgs | Out-Host
     # Keep incomplete uploads in a draft; expose the release only after hash verification.
     $uploaded = Invoke-ReleaseGh -Arguments @('api', "repos/$repoName/releases/tags/$tag") | ConvertFrom-Json

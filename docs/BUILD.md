@@ -1,6 +1,6 @@
-# Build Eyeball-XL 0.1.5
+# Build baanish-armory 0.2.0
 
-Use this project to build the Eyeball-XL Blueprinter bundle and source archive. You'll need a local game installation and asset export. The repository does not include extracted game assets.
+Use this project to build the baanish-armory Blueprinter bundle and source archive, with Eyeball-XL and the AGK-4 Lance. You'll need a local game installation and asset export. The repository does not include extracted game assets.
 
 ## Prepare the local dependencies
 
@@ -12,7 +12,7 @@ Keep the repository and export in plain local folders. Symlinks, junctions and O
 2. Export your game installation using **AssetRipper 2.0.0**, with Script Content Level **Level 1** and Script Export Format **Decompilation**. Keep the export path short enough for Unity's Windows path limit. Other versions have not been checked for compatible asset paths and object IDs.
 3. In Unity, open **Blueprinter > Project Setup**. Enter game version `0.34.2`.
 4. Choose **Import Game Assemblies** and select your `NuclearOption.exe`. Let Unity finish compilation and reload before continuing. Copying a generated `Packages/nuclearoption` directory into a fresh project does not replace this step.
-5. Use **Baanish Armory > Import game assets with stable references** and select the export's `ExportedProject/Assets` directory. This helper seeds the 20 game asset IDs required by the authored files before calling Blueprinter's importer. A plain Blueprinter import accepts new AssetRipper IDs, which do not match these files.
+5. Use **Baanish Armory > Import game assets with stable references** and select the export's `ExportedProject/Assets` directory. This helper seeds the 27 game asset IDs required by the authored files before calling Blueprinter's importer. A plain Blueprinter import accepts new AssetRipper IDs, which do not match these files.
 6. Import **TMP Essentials** when prompted, then choose **Refresh Op References**.
 
 Use this repository's Unity project. Its import helper and build script keep the mod's game references intact.
@@ -39,11 +39,23 @@ The build writes a timestamped directory under `.local/builds` with the `.nobp` 
 
 The baseline manifest pins the mod assets. If you change an asset, include its baseline update in the same change. Do not bypass validation to produce a release.
 
-Every build also verifies the 20 imported stock assets and 21 object references. Missing or remapped dependencies stop the build before it creates output, even when the authored files still match the baseline.
+Every build also verifies the 27 imported stock assets and 28 object references. Missing or remapped dependencies stop the build before it creates output, even when the authored files still match the baseline.
 
 A Blueprinter `.source.zip` contains the mod assets for importing into another prepared Blueprinter project. It is separate from the repository source archive, which includes this build code and documentation.
 
 `DependencyBundleBuild` limits Blueprinter's separate stock bundle to the mod's recursive game dependencies. The stock bundle stays local. This avoids compiling unrelated exported compute shaders and material variants. The helper calls private methods in the pinned Blueprinter editor revision, so upgrading that dependency requires checking the helper and rebuilding from a fresh cache.
+
+## Rebuild the AGK-4 Lance assets
+
+The Lance's model, pod, icon and stencil come from scripts in `art/source/lance`, and the Unity assets are authored from them. You only need this after changing the Lance's shape, art or stats. Blender 4.2 or later runs the model scripts; `EXPORT` is your AssetRipper `ExportedProject/Assets` directory.
+
+1. Build the model and its preview renders: `blender --background --factory-startup --python art/source/lance/build_lance.py -- <preview folder> <EXPORT>`.
+2. Export the Unity meshes: `blender --background --factory-startup <preview folder>/lance.blend --python art/source/lance/export_lance_meshes.py -- .local/lance-export <EXPORT>`.
+3. Redraw the icon and stencil if they changed: `python art/source/lance/lance_icon.py` and `python art/source/lance/lance_stencil.py`.
+4. With the Unity project closed, run **Baanish Armory > Author AGK-4 Lance** through `Unity.exe -batchmode -quit -projectPath unity -executeMethod BaanishArmory.Editor.LanceAssetBuild.Author`. It refreshes the Kingpin-based copies and keeps their GUIDs.
+5. Update `config/prototype-baseline-0.2.0.json` for the changed files, then build.
+
+`render_comparison.py` and `render_vortex_loadout.py` render the Lance beside the stock AGRs and on an FS-20 Vortex for review.
 
 ## Prepare local release packages
 
@@ -83,16 +95,18 @@ That command uploads nothing. To build and publish a new version, install the Gi
 
 The command builds with your local Unity installation, packages the output, uploads a draft, verifies every uploaded file's SHA-256 hash, then publishes it as a prerelease. It requires a clean working tree and a local commit matching the GitHub default branch. It refuses to replace an existing version tag. A failed upload stays in draft for inspection.
 
-The current build and packaging checks pin version 0.1.5. For a new version, update the mod metadata, baseline, game reference map and matching validation checks together. Passing `-UnityPath` selects a specific editor installation. Repository visibility is never changed by these scripts.
+The current build and packaging checks pin version 0.2.0. For a new version, update the mod metadata, baseline, game reference map and matching validation checks together. Passing `-UnityPath` selects a specific editor installation. Repository visibility is never changed by these scripts.
 
 ## Verify in game
 
 With Blueprinter and the mod enabled, select **EW-25 Medusa > Outer Wing Pylons > Eyeball-XL**. Check one missile on each rack, two rounds total, usable inner pylons and no internal XL option. Confirm $2.5 million per missile and $5 million per pair. Launch both missiles and inspect the aircraft, missile model and loadout icon. Check spotting, rearming and the original Eyeball on an aircraft that normally carries it.
 
+For the Lance, select **FS-20 Vortex > Inner wing pylons > AGK-4 Lance x4** and check four rounds per pod at $150,000 each, the loadout icon, the AGK-4 stencil and the rocket noses in the tube mouths. Check that the pod is offered on each listed hardpoint and that the VT-7 Vagrant's centre pylon clears the landing gear. Fire at a lased tank and a lased SPAAG from a helicopter and from a supersonic jet, and confirm the laser windows show the same purple as the Eyeball-XL's.
+
 The passive detector's 12 km search setting is not a measured detection radius. Target visibility and terrain affect spotting. I haven't tested multiplayer. Balance and exact endurance still need testing.
 
 ## Validation scope
 
-The build checks asset hashes, imported game references, the Eyeball-XL display name, and the $2.5 million per-round and $5 million pair costs. Packaging checks the exported source and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
+The build checks asset hashes, imported game references, both weapons' display names, costs and hardpoint registrations, the Eyeball-XL's $2.5 million per-round and $5 million pair costs, and the Lance's motor, penetrator, seeker, pod and materials. Packaging checks the exported source and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
 
 These checks catch missing dependencies and unintended asset changes. They don't replace an in-game test. Bundle bytes and ZIP timestamps are not guaranteed to reproduce identically.

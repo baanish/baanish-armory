@@ -66,10 +66,10 @@ namespace BaanishArmory.Editor
                 throw new InvalidOperationException("Finish play mode or compilation before building.");
 
             var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText(ModFolder + "/modinfo.json"));
-            if (info.displayName != ModName || info.version != "0.1.5" || !ModBuilder.ValidateVersion(info.version, out var version))
-                throw new InvalidDataException("Expected the authored baanish-armory 0.1.5 source.");
+            if (info.displayName != ModName || info.version != "0.2.0" || !ModBuilder.ValidateVersion(info.version, out var version))
+                throw new InvalidDataException("Expected the authored baanish-armory 0.2.0 source.");
             var workspace = Directory.GetParent(Application.dataPath).Parent.FullName;
-            var baseline = JsonUtility.FromJson<SourceBaseline>(File.ReadAllText(Path.Combine(workspace, "config", "prototype-baseline-0.1.5.json")));
+            var baseline = JsonUtility.FromJson<SourceBaseline>(File.ReadAllText(Path.Combine(workspace, "config", "prototype-baseline-0.2.0.json")));
             ValidateSourceBaseline(workspace, baseline);
             if (Application.unityVersion != baseline.unityVersion)
                 throw new InvalidDataException("Use Unity " + baseline.unityVersion + " for this source baseline.");
@@ -78,7 +78,7 @@ namespace BaanishArmory.Editor
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             GameAssetSetup.VerifyImportedReferences();
             var assets = BlueprinterAssets.GetModAssetPaths(ModName);
-            if (assets.Length != 8)
+            if (assets.Length != 23)
                 throw new InvalidDataException("Unexpected authored asset count for this prototype version.");
             foreach (var path in assets)
             {
@@ -150,7 +150,8 @@ namespace BaanishArmory.Editor
         private static void ValidateManifest(PatchManifest manifest, string version)
         {
             if (manifest.modName != ModName || manifest.modVersion != version ||
-                manifest.schemaVersion != 3 || manifest.gameVersion != "0.34.2" || manifest.Ops.Count != 2)
+                manifest.schemaVersion != 3 || manifest.gameVersion != "0.34.2" ||
+                manifest.Ops.Any(op => op.opId != "OpAddWeaponToHardpoint" && op.opId != "OpAddToEncyclopedia"))
                 throw new InvalidDataException("Unexpected prototype manifest identity or operation count.");
             var targets = new HashSet<string>();
             foreach (var patch in manifest.Patches)
@@ -163,20 +164,27 @@ namespace BaanishArmory.Editor
                 if (!targets.Add(key))
                     throw new InvalidDataException("Duplicate runtime patch target: " + key);
             }
-            var hardpoint = manifest.Ops.Find(op => op.opId == "OpAddWeaponToHardpoint");
-            var encyclopedia = manifest.Ops.Find(op => op.opId == "OpAddToEncyclopedia");
-            if (hardpoint == null || encyclopedia == null)
-                throw new InvalidDataException("Missing weapon registration operations.");
-            var registration = JsonUtility.FromJson<HardpointPayload>(hardpoint.payloadJson);
-            if (registration.weaponJsonKey != "baanish_eyeball_xl_single" || registration.aircraft.Length != 1 ||
-                registration.aircraft[0].aircraftJsonKey != "EW1" || registration.aircraft[0].hardpointIndices.Length != 1 ||
-                registration.aircraft[0].hardpointIndices[0] != 4)
-                throw new InvalidDataException("Expected Medusa outer-wing registration only.");
-            var entries = JsonUtility.FromJson<EncyclopediaPayload>(encyclopedia.payloadJson).entries;
-            if (entries.Length != 2 ||
-                Array.Find(entries, entry => entry.locator == ModFolder + "/baanish_eyeball_xl_definition.asset") == null ||
-                Array.Find(entries, entry => entry.locator == ModFolder + "/baanish_eyeball_xl_single.asset") == null)
-                throw new InvalidDataException("Expected the independent missile definition and mount.");
+            var registrations = manifest.Ops.Where(op => op.opId == "OpAddWeaponToHardpoint")
+                .Select(op => JsonUtility.FromJson<HardpointPayload>(op.payloadJson)).ToList();
+            if (registrations.Count != 2)
+                throw new InvalidDataException("Expected one hardpoint registration per weapon.");
+            RequireRegistration(registrations, "baanish_eyeball_xl_single", new[] { ("EW1", new[] { 4 }) });
+            RequireRegistration(registrations, "baanish_agk4_lance_4pod", LanceAssetBuild.Hardpoints);
+            var entries = manifest.Ops.Where(op => op.opId == "OpAddToEncyclopedia")
+                .SelectMany(op => JsonUtility.FromJson<EncyclopediaPayload>(op.payloadJson).entries).Select(entry => entry.locator).ToList();
+            var expected = new[] { "baanish_eyeball_xl_definition", "baanish_eyeball_xl_single", "baanish_agk4_lance_definition", "baanish_agk4_lance_4pod" }
+                .Select(name => ModFolder + "/" + name + ".asset");
+            if (entries.Count != 4 || !new HashSet<string>(entries).SetEquals(expected))
+                throw new InvalidDataException("Expected each weapon's independent missile definition and mount in the encyclopedia.");
+        }
+
+        private static void RequireRegistration(List<HardpointPayload> registrations, string weapon, (string aircraft, int[] sets)[] expected)
+        {
+            var registration = registrations.Find(candidate => candidate.weaponJsonKey == weapon)
+                ?? throw new InvalidDataException("Missing hardpoint registration for " + weapon);
+            var actual = registration.aircraft.Select(entry => entry.aircraftJsonKey + ":" + string.Join(",", entry.hardpointIndices)).ToList();
+            if (!actual.SequenceEqual(expected.Select(entry => entry.aircraft + ":" + string.Join(",", entry.sets))))
+                throw new InvalidDataException("Unexpected hardpoints for " + weapon + ": " + string.Join(" ", actual));
         }
 
         private static void ValidatePrototypeSettings()
@@ -242,6 +250,58 @@ namespace BaanishArmory.Editor
             }
             if (detectors != 1 || opticalSeekers != 1 || missileComponents != 1)
                 throw new InvalidDataException("Expected one missile, optical seeker and passive detector.");
+            ValidateLanceSettings();
+        }
+
+        // The AGK-4 Lance numbers from docs/LANCE-CONCEPT.md, as authored by LanceAssetBuild.
+        private static void ValidateLanceSettings()
+        {
+            var mount = new SerializedObject(AssetDatabase.LoadMainAssetAtPath(ModFolder + "/baanish_agk4_lance_4pod.asset"));
+            if (mount.FindProperty("ammo").intValue != 4 || mount.FindProperty("mass").floatValue != 335 ||
+                mount.FindProperty("emptyMass").floatValue != 95 || mount.FindProperty("drag").floatValue != 0.08f ||
+                mount.FindProperty("RCS").floatValue != 0.005f)
+                throw new InvalidDataException("Expected four Lance rounds per pod: 335 kg loaded, 95 kg empty, drag 0.08, RCS 0.005.");
+            var info = new SerializedObject(AssetDatabase.LoadMainAssetAtPath(ModFolder + "/baanish_agk4_lance_info.asset"));
+            var definition = new SerializedObject(AssetDatabase.LoadMainAssetAtPath(ModFolder + "/baanish_agk4_lance_definition.asset"));
+            if (info.FindProperty("weaponName").stringValue != "AGK-4 Lance" || info.FindProperty("shortName").stringValue != "AGK-4" ||
+                definition.FindProperty("unitName").stringValue != "AGK-4 Lance" || mount.FindProperty("mountName").stringValue != "AGK-4 Lance x4")
+                throw new InvalidDataException("Lance display names must be AGK-4 Lance.");
+            if (info.FindProperty("costPerRound").floatValue != 0.15f || definition.FindProperty("value").floatValue != 0.15f ||
+                info.FindProperty("targetRequirements.minAlignment").floatValue != 4)
+                throw new InvalidDataException("Expected $150,000 per Lance round and a 4-degree launch arc.");
+
+            var missile = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/baanish_agk4_lance.prefab");
+            var flights = 0;
+            var seekers = 0;
+            foreach (var component in missile.GetComponentsInChildren<Component>(true))
+            {
+                if (component == null)
+                    throw new InvalidDataException("Lance flight prefab contains a missing component.");
+                var type = component.GetType().FullName;
+                var serialized = new SerializedObject(component);
+                if (type == "Missile")
+                {
+                    flights++;
+                    if (serialized.FindProperty("pierceDamage").floatValue != 3000 || serialized.FindProperty("blastYield").floatValue != 2 ||
+                        serialized.FindProperty("motors.Array.data[0].thrust").floatValue != 28000 ||
+                        serialized.FindProperty("motors.Array.data[0].burnTime").floatValue != 5.15f ||
+                        serialized.FindProperty("finArea").floatValue != 0.035f ||
+                        serialized.FindProperty("armorProperties.fireArmor").floatValue != 6 ||
+                        serialized.FindProperty("armorProperties.fireTolerance").floatValue != 0.3f)
+                        throw new InvalidDataException("Expected the Lance motor, fins, penetrator and GPO-500 fire armor.");
+                }
+                if (type == "LaserSeeker")
+                {
+                    seekers++;
+                    if (serialized.FindProperty("maxSeekerAngle").floatValue != 5)
+                        throw new InvalidDataException("Expected the Lance's 5-degree laser seeker cone.");
+                }
+            }
+            if (flights != 1 || seekers != 1)
+                throw new InvalidDataException("Expected one Lance missile and one laser seeker.");
+            var pod = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/baanish_agk4_lance_4pod.prefab");
+            if (pod.GetComponentsInChildren<Component>(true).Count(component => component != null && component.GetType().FullName == "MountedMissile") != 4)
+                throw new InvalidDataException("Expected four physical Lance launchers per pod.");
         }
 
         private static void ThrowBuildErrors(List<string> errors)
@@ -286,10 +346,10 @@ namespace BaanishArmory.Editor
 
         private static void ValidateSourceBaseline(string workspace, SourceBaseline baseline)
         {
-            if (baseline == null || baseline.schemaVersion != 1 || baseline.modVersion != "0.1.5" ||
+            if (baseline == null || baseline.schemaVersion != 1 || baseline.modVersion != "0.2.0" ||
                 baseline.unityVersion != "2022.3.62f2" || baseline.hashPolicy != "png-bytes;other-files-utf8-lf-no-bom" ||
-                baseline.files == null || baseline.files.Length != 19)
-                throw new InvalidDataException("Expected the checked-in 0.1.5 source baseline with 19 files.");
+                baseline.files == null || baseline.files.Length != 49)
+                throw new InvalidDataException("Expected the checked-in 0.2.0 source baseline with 49 files.");
             var relativeMod = "unity/" + ModFolder;
             var modPath = Path.GetFullPath(Path.Combine(workspace, relativeMod));
             var expected = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -335,7 +395,7 @@ namespace BaanishArmory.Editor
                 bodyMaterial == null || opticsMaterial == null)
                 throw new InvalidDataException("Expected the validated faceted nose and three integrated windows with their stock materials.");
             if (mesh.vertexCount != 5059 || mesh.GetIndexCount(0) != 6906 * 3 || mesh.GetIndexCount(1) != 96 * 3)
-                throw new InvalidDataException("The 0.1.5 source baseline requires 5059 vertices, 6906 body triangles and 96 optical-window triangles.");
+                throw new InvalidDataException("The Eyeball-XL model requires 5059 vertices, 6906 body triangles and 96 optical-window triangles.");
             foreach (var name in new[] { "baanish_eyeball_xl.prefab", "baanish_eyeball_xl_single.prefab" })
             {
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/" + name);
@@ -351,6 +411,32 @@ namespace BaanishArmory.Editor
                 }
                 if (matches != 1)
                     throw new InvalidDataException("Expected one custom missile model in " + name);
+            }
+            ValidateLanceVisuals();
+        }
+
+        private static void ValidateLanceVisuals()
+        {
+            EyeballVisualImport.ValidateAuthoredIcon(ModFolder + "/baanish_agk4_lance_icon.png", ModFolder + "/baanish_agk4_lance_info.asset");
+            var body = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath("ce7d6ad143c11934aad61cbd4b0f20d3"));
+            var optics = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath("2f6bf9049589566438b752ff290ea93a"));
+            var stencil = AssetDatabase.LoadAssetAtPath<Material>(ModFolder + "/baanish_agk4_stencil.mat");
+            var models = new[]
+            {
+                (prefab: "baanish_agk4_lance.prefab", mesh: "baanish_agk4_lance_mesh.asset", materials: new[] { body, optics }, renderers: 1),
+                (prefab: "baanish_agk4_lance_4pod.prefab", mesh: "baanish_agk4_lance_folded_mesh.asset", materials: new[] { body, optics }, renderers: 4),
+                (prefab: "baanish_agk4_lance_4pod.prefab", mesh: "baanish_agk4_lance_4pod_mesh.asset", materials: new[] { body, stencil }, renderers: 1),
+            };
+            foreach (var model in models)
+            {
+                var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(ModFolder + "/" + model.mesh);
+                if (mesh == null || mesh.subMeshCount != 2 || model.materials.Any(material => material == null))
+                    throw new InvalidDataException("Expected two-material Lance model " + model.mesh);
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/" + model.prefab);
+                var renderers = prefab.GetComponentsInChildren<MeshFilter>(true).Where(filter => filter.sharedMesh == mesh)
+                    .Select(filter => filter.GetComponent<MeshRenderer>()).ToList();
+                if (renderers.Count != model.renderers || renderers.Any(renderer => renderer == null || !renderer.sharedMaterials.SequenceEqual(model.materials)))
+                    throw new InvalidDataException("Lance model " + model.mesh + " must use its stock and stencil materials in " + model.prefab);
             }
         }
 

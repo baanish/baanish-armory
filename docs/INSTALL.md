@@ -6,8 +6,8 @@ These are the installation steps I use with Nuclear Option Mod Manager 3.1.0. Yo
 
 1. Close Nuclear Option. Install and enable Blueprinter 2.0.1 in Nuclear Option Mod Manager.
 2. If `baanish-armory` is already installed, back up its folder outside the game's `BepInEx` directory, then uninstall that entry in NOMM.
-3. Download `baanish-armory_0.1.5-manual-install.zip` from [releases](https://github.com/baanish/baanish-armory/releases) and extract it into a temporary folder. Copy its single `baanish-armory` folder into the game's `BepInEx/plugins` directory.
-4. Refresh NOMM's Library. Confirm one `baanish-armory` entry at version 0.1.5 and enable it. Keep Blueprinter enabled too.
+3. Download `baanish-armory_0.2.0-manual-install.zip` from [releases](https://github.com/baanish/baanish-armory/releases) and extract it into a temporary folder. Copy its single `baanish-armory` folder into the game's `BepInEx/plugins` directory.
+4. Refresh NOMM's Library. Confirm one `baanish-armory` entry at version 0.2.0 and enable it. Keep Blueprinter enabled too.
 5. Launch the game. On the EW-25 Medusa, select **Outer Wing Pylons > Eyeball-XL**. The pair carries two missiles total, at $2.5 million each and $5 million for the pair.
 
 Keep only one installed copy. NOMM scans enabled, disabled and nested addon folders and may delete duplicate IDs during refresh. Keep backups outside those folders.

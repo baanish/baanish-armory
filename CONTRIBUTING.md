@@ -14,6 +14,6 @@ Include editable source files and explain which parts you created and which depe
 
 Keep changes focused and explain what they fix. Tell me what you tested in game, such as equipping, launching, spotting or rearming. If you tested multiplayer, say so.
 
-Follow the [build guide](docs/BUILD.md) to set up the Unity project. The build checks the mod assets against a list of file hashes. If you change those assets, update `config/prototype-baseline-0.1.5.json` in the same change so I can review both together.
+Follow the [build guide](docs/BUILD.md) to set up the Unity project. The build checks the mod assets against a list of file hashes. If you change those assets, update `config/prototype-baseline-0.2.0.json` in the same change so I can review both together.
 
 Run `./scripts/Test-Source.ps1` before submitting a change. GitHub runs the same source checks on pushes and pull requests. Unity builds happen locally; use your own prepared PC when making a release build.

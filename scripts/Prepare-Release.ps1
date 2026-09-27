@@ -7,7 +7,7 @@ Set-StrictMode -Version Latest
 $workspacePath = Split-Path -Parent $PSScriptRoot
 $modPath = Join-Path $workspacePath 'unity/Assets/Blueprinter/Mods/baanish-armory'
 $version = (Get-Content -LiteralPath (Join-Path $modPath 'modinfo.json') -Raw | ConvertFrom-Json).version
-if ($version -ne '0.1.5') { throw 'Review the packaging contract before preparing a different version.' }
+if ($version -ne '0.2.0') { throw 'Review the packaging contract before preparing a different version.' }
 $buildPath = [IO.Path]::GetFullPath($BuildDirectory, $PWD.Path)
 $bundleName = "baanish-armory_$version.nobp"
 $sourceName = "baanish-armory_$version.source.zip"
@@ -50,7 +50,7 @@ Get-ChildItem -LiteralPath $modPath -File | Where-Object { $_.Name -notin @('mod
 }
 $archive = [IO.Compression.ZipFile]::OpenRead((Join-Path $buildPath $sourceName))
 try {
-    if ($expectedAssets.Count -ne 16 -or $archive.Entries.Count -ne 17) { throw 'Expected eight authored assets, their metas and a source manifest.' }
+    if ($expectedAssets.Count -ne 46 -or $archive.Entries.Count -ne 47) { throw 'Expected 23 authored assets, their metas and a source manifest.' }
     $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($entry in $archive.Entries) {
         if (-not $seen.Add($entry.FullName)) { throw 'Duplicate Blueprinter source entry.' }
@@ -83,12 +83,12 @@ foreach ($name in $sourceFiles) {
     if ($name -match '(^|/)(\.local|\.git|_donotship|Library|Temp|UserSettings|Logs|BlueprinterCache|Generated|nuclearoption|TextMesh Pro|155mmrailgun|Example)(/|$)' -or
         $name -match '(?i)\.(dll|pdb|nobp|zip|blend\d*)$|\.prototype-receipt\.json$' -or
         $name -match '(^|/)\.\.?(/|$)|\\|:' -or
-        $name -notmatch '^(\.gitattributes|\.gitignore|\.github/workflows/ci\.yml|README\.md|LICENSE|CONTRIBUTING\.md|THIRD-PARTY-NOTICES\.md|docs/[^/]+\.md|config/(prototype-baseline-0\.1\.5\.json|game-asset-references\.json|release-source-files\.txt)|scripts/(Build-Prototype|Prepare-Release|Test-Source|Publish-Release)\.ps1|art/references/eyeball-xl-lineart-clean-reference\.png|unity/.+)$') {
+        $name -notmatch '^(\.gitattributes|\.gitignore|\.github/workflows/ci\.yml|README\.md|LICENSE|CONTRIBUTING\.md|THIRD-PARTY-NOTICES\.md|docs/[^/]+\.md|config/(prototype-baseline-0\.2\.0\.json|game-asset-references\.json|release-source-files\.txt)|scripts/(Build-Prototype|Prepare-Release|Test-Source|Publish-Release)\.ps1|art/references/eyeball-xl-lineart-clean-reference\.png|art/source/lance/[^/]+\.(py|png)|unity/.+)$') {
         throw "Unexpected public source file: $name"
     }
     Assert-ReleaseFile (Join-Path $workspacePath $name)
 }
-foreach ($required in @('LICENSE', 'README.md', 'THIRD-PARTY-NOTICES.md', 'docs/INSTALL.md', 'docs/BUILD.md', 'unity/LICENSE', 'config/prototype-baseline-0.1.5.json')) {
+foreach ($required in @('LICENSE', 'README.md', 'THIRD-PARTY-NOTICES.md', 'docs/INSTALL.md', 'docs/BUILD.md', 'unity/LICENSE', 'config/prototype-baseline-0.2.0.json')) {
     if ($required -notin $sourceFiles) { throw "Required public source is excluded: $required" }
 }
 
