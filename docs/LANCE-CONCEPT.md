@@ -1,14 +1,14 @@
 # AGK-4 Lance concept
 
-Status: built in 0.2.0 and not yet tested in game. The numbers below are what the build uses, not balance I've settled on.
+Status: shipped in 0.2.0 and playtested in single player. The numbers below are what the build uses, not balance I've settled on.
 
 ## The idea
 
 The AGK-4 Lance (air-ground kinetic) is a laser-guided anti-armor rocket built from the AGR-24 Kingpin. It's twice as long with half the frontal area, has much smaller fins, a longer burn, and a small charge behind a penetrator. It kills tanks and SPAAGs. Against ships it only knocks out the parts it hits directly, like a radar or magazine, and barely scratches the hull.
 
-It's about three times as fast as the Kingpin, but it turns half as well and the launch circle is half the size, so you have to line up carefully.
+It flies about three times as fast as the Kingpin. In exchange, it turns half as well and its launch circle is half the size, so you have to line up carefully.
 
-## Proposed numbers
+## The numbers
 
 | | AGR-24 Kingpin (stock) | AGK-4 Lance |
 |---|---|---|
@@ -60,11 +60,11 @@ That estimate runs out until the rocket drops below 200 m/s, the point where the
 
 The real limit is guidance. A laser rocket only locks a lased target within 15 km, inside its seeker cone and in line of sight. For Lance, that 15 km lock limit sets the effective range, not fuel.
 
-The one hand-set number is `targetRequirements.maxRange`, which only tells the AI when to fire. Kingpin's 8 km is about three quarters of its kinematic range from a hover. For Lance I'd set it by time of flight rather than kinematics: 12 km, where a helicopter shot still arrives in about 10 seconds.
+The one hand-set number is `targetRequirements.maxRange`, which only tells the AI when to fire. The Kingpin's 8 km is about three quarters of its kinematic range from a hover. I set the Lance's by time of flight instead, at 12 km, where a helicopter shot still arrives in about 10 seconds.
 
 ## Why speed and not warhead
 
-A stock Kingpin already kills every SPAAG in one hit, with pierce to spare even at a glancing angle. The warhead isn't what makes SPAAGs hard for it. The flight time is: 21 seconds to cover 8 km from a hover against a 30 mm gun that shoots down rockets, and gives triple priority to one aimed at itself. Lance covers the same 8 km in under 7 seconds.
+A stock Kingpin already kills every SPAAG in one hit, with pierce to spare even at a glancing angle. Its warhead isn't what makes SPAAGs hard for it. Its flight time is. It takes 21 seconds to cover 8 km from a hover, against a 30 mm gun that shoots down rockets and gives triple priority to one aimed at itself. The Lance covers the same 8 km in under 7 seconds.
 
 The extra pierce is for heavy tanks. A Kingpin needs two square hits on a Spearhead's turret. Lance kills it with one hit within about 53° of square, and it kills the Spearhead hull and every Type-12 part at any angle.
 
@@ -96,7 +96,7 @@ These points come from reading the game code.
 - Turn radius at full lift depends on mass divided by fin area, not on speed. Halving fin area doubles it: about 2.8 km at sea level, against 1.35 km for Kingpin. At three times the speed, it also has a third of the time to correct.
 - The HUD launch circle is `min(minAlignment, distance × 0.002)` degrees, so it's `minAlignment` beyond 4 km at stock and 2 km at 4°.
 - A longer burn keeps the plume visible about 3.4 times as long. While burning, the rocket's visual range grows by about 6.7 km.
-- Laser guidance leads the target using the weapon's listed max speed. That field has to match the real top speed or the rocket will lead wrong.
+- Laser guidance leads the target using the weapon's listed max speed, so that field has to match the real top speed. The Lance lists 2,200 m/s, its peak from a subsonic jet.
 - AI weapon choice uses armor tiers, and ships (tier 4 and 5) sit below tanks (tier 6). I can't keep AI from firing it at ships through tiers alone.
 
 ## Pod drag and RCS
@@ -115,10 +115,8 @@ The Lance uses the GPO-500's fire armor, 6 with tolerance 0.3, so a solid penetr
 
 I first wanted a larger radar cross-section as a drawback. It doesn't work against the targets that matter: no SPAAG or CIWS has a radar, and they spot by sight. A pod's RCS adds to the carrying aircraft's, so a bigger one mostly penalizes stealth jets against SAM radars. The 4-round limit, the price and the narrow launch circle carry the drawback instead.
 
-## What building it would take
+## How it's built
 
-Every change is a data field on stock components: the Kingpin's motor, aero, warhead, laser seeker, weapon info and mount. Blueprinter can do it without a plugin, like Eyeball-XL.
+Every change is a data field on stock components, so Blueprinter handles it without a plugin, like Eyeball-XL. The Lance is a copy of the Kingpin's flight prefab, pod, unit definition, weapon info and mount, with new meshes and the numbers above.
 
-- A stretched Kingpin model: twice the length, 0.71 times the diameter, with smaller fins. The 4-round pod needs lengthening to match.
-- A new weapon info and a 4-round mount, added to the same aircraft that carry Kingpin.
-- Set the weapon info's `maxSpeed` to the measured top speed from a jet launch.
+Scripts in `art/source/lance` generate the model, the pod and its AGK-4 stencil, and the loadout icon. `LanceAssetBuild.cs` authors the Unity assets from them, and the [build guide](BUILD.md#rebuild-the-agk-4-lance-assets) has the steps.
