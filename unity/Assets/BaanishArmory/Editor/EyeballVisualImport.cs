@@ -11,10 +11,13 @@ namespace BaanishArmory.Editor
         private const string ModFolder = "Assets/Blueprinter/Mods/baanish-armory";
         private const string IconPath = ModFolder + "/baanish_eyeball_xl_icon.png";
 
-        public static void ValidateAuthoredIcon()
+        public static void ValidateAuthoredIcon() => ValidateAuthoredIcon(IconPath, ModFolder + "/baanish_eyeball_xl_info.asset");
+
+        // Loadout icons share the Eyeball-XL icon's 1774 x 887 source and import settings.
+        public static void ValidateAuthoredIcon(string iconPath, string infoPath)
         {
-            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(IconPath);
-            var importer = (TextureImporter)AssetImporter.GetAtPath(IconPath);
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
+            var importer = (TextureImporter)AssetImporter.GetAtPath(iconPath);
             if (sprite == null) throw new InvalidDataException("Missing imported icon Sprite.");
             var failures = new List<string>();
             // Unity's 1774-to-512 import rounds sprite bounds by at most 0.000031 pixels.
@@ -36,7 +39,7 @@ namespace BaanishArmory.Editor
             if (importer.textureCompression != TextureImporterCompression.Uncompressed) failures.Add("compression");
             if (!importer.sRGBTexture || importer.alphaIsTransparency) failures.Add("colorImport");
             if (failures.Count != 0) throw new InvalidDataException("Icon import settings changed: " + string.Join("; ", failures));
-            var info = AssetDatabase.LoadMainAssetAtPath(ModFolder + "/baanish_eyeball_xl_info.asset");
+            var info = AssetDatabase.LoadMainAssetAtPath(infoPath);
             if (new SerializedObject(info).FindProperty("weaponIcon").objectReferenceValue != sprite)
                 throw new InvalidDataException("Weapon info does not reference the authored icon Sprite.");
         }

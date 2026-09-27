@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "modVersion": "0.1.5",
+  "modVersion": "0.2.0",
   "gameVersion": "0.34.2",
   "assets": [
     {
@@ -13,6 +13,12 @@
       "exportPath": "AudioClip/Munition_Flight.ogg",
       "path": "AudioClip/Munition_Flight_PLACEHOLDER.ogg",
       "guid": "c58b8933632eefa45ad9912d119df80d",
+      "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
+    },
+    {
+      "exportPath": "AudioClip/rocket_fast_loop.ogg",
+      "path": "AudioClip/rocket_fast_loop_PLACEHOLDER.ogg",
+      "guid": "fd5a5eebfb2d8a34cb01c0be6e3c015a",
       "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
     },
     {
@@ -31,6 +37,12 @@
       "exportPath": "AudioClip/weaponrelease.ogg",
       "path": "AudioClip/weaponrelease_PLACEHOLDER.ogg",
       "guid": "371550a2e35be5242aff150952185715",
+      "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
+    },
+    {
+      "exportPath": "AudioClip/KingpinLaunch.ogg",
+      "path": "AudioClip/KingpinLaunch_PLACEHOLDER.ogg",
+      "guid": "fa3d519f3dc71d242bc4d13fea8ca6a4",
       "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
     },
     {
@@ -58,6 +70,30 @@
       "exportPath": "GameObject/WaterSurfaceExplosion_1kg.prefab",
       "path": "GameObject/WaterSurfaceExplosion_1kg_PLACEHOLDER.prefab",
       "guid": "a9c6ec3e9792b0c48b3a010899940949",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/WaterSurfaceExplosion_10kg.prefab",
+      "path": "GameObject/WaterSurfaceExplosion_10kg_PLACEHOLDER.prefab",
+      "guid": "aab442fa58394694fa56c24d2f7f6142",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/explosion_10kg.prefab",
+      "path": "GameObject/explosion_10kg_PLACEHOLDER.prefab",
+      "guid": "bb736e92b4ac30d43b560d8a162df215",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/explosion_10kg_armor.prefab",
+      "path": "GameObject/explosion_10kg_armor_PLACEHOLDER.prefab",
+      "guid": "f9eb415daef5e2640adb67b100637e7b",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/explosion_10kg_dusty.prefab",
+      "path": "GameObject/explosion_10kg_dusty_PLACEHOLDER.prefab",
+      "guid": "9dc517c3ea6d9b04dbd5000075083eb1",
       "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
     },
     {
@@ -103,6 +139,12 @@
       "objects": [{ "fileId": 2100000, "type": "UnityEngine.Material, UnityEngine.CoreModule" }]
     },
     {
+      "exportPath": "Material/Missiles4.mat",
+      "path": "Material/Missiles4_PLACEHOLDER.mat",
+      "guid": "ce7d6ad143c11934aad61cbd4b0f20d3",
+      "objects": [{ "fileId": 2100000, "type": "UnityEngine.Material, UnityEngine.CoreModule" }]
+    },
+    {
       "exportPath": "Mesh/launchpylon1.asset",
       "path": "Mesh/launchpylon1_PLACEHOLDER.asset",
       "guid": "a7520a9d7ff21904c813a9991b4fb340",
@@ -113,6 +155,12 @@
       "path": "PhysicMaterial/Metal_PLACEHOLDER.physicMaterial",
       "guid": "9de9d3256f0dac9429ccb6f53d9cdc30",
       "objects": [{ "fileId": 13400000, "type": "UnityEngine.PhysicMaterial, UnityEngine.PhysicsModule" }]
+    },
+    {
+      "exportPath": "Shader/Shader Graphs_ColorableAttachment.shader",
+      "path": "Shader/Shader Graphs_ColorableAttachment_PLACEHOLDER.shader",
+      "guid": "3f8d019a8c4844c4f81f294da6ded6ba",
+      "objects": [{ "fileId": 4800000, "type": "UnityEngine.Shader, UnityEngine.CoreModule" }]
     },
     {
       "exportPath": "Sprite/hudIcon_missile.asset",

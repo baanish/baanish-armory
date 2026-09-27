@@ -16,7 +16,7 @@ foreach ($name in $sourceFiles) {
     if ($name -match '(^|/)(\.local|\.git|_donotship|Library|Temp|UserSettings|Logs|BlueprinterCache|Generated|nuclearoption|TextMesh Pro|155mmrailgun|Example)(/|$)' -or
         $name -match '(?i)\.(dll|pdb|nobp|zip|blend\d*)$|\.prototype-receipt\.json$' -or
         $name -match '(^|/)\.\.?(/|$)|\\|:|^/|//|/$' -or
-        $name -notmatch '^(\.gitattributes|\.gitignore|\.github/workflows/ci\.yml|README\.md|LICENSE|CONTRIBUTING\.md|THIRD-PARTY-NOTICES\.md|docs/[^/]+\.md|config/(prototype-baseline-0\.1\.5\.json|game-asset-references\.json|release-source-files\.txt)|scripts/(Build-Prototype|Prepare-Release|Publish-Release|Test-Source)\.ps1|art/references/eyeball-xl-lineart-clean-reference\.png|unity/.+)$') {
+        $name -notmatch '^(\.gitattributes|\.gitignore|\.github/workflows/ci\.yml|README\.md|LICENSE|CONTRIBUTING\.md|THIRD-PARTY-NOTICES\.md|docs/[^/]+\.md|config/(prototype-baseline-0\.2\.0\.json|game-asset-references\.json|release-source-files\.txt)|scripts/(Build-Prototype|Prepare-Release|Publish-Release|Test-Source)\.ps1|art/references/eyeball-xl-lineart-clean-reference\.png|art/source/lance/[^/]+\.(py|png)|unity/.+)$') {
         throw "Unexpected public source file: $name"
     }
     $path = Join-Path $workspacePath $name
@@ -32,15 +32,15 @@ foreach ($name in $sourceFiles) {
         if ($parseErrors.Count) { throw "PowerShell syntax error in ${name}: $($parseErrors.Message -join '; ')" }
     }
 }
-foreach ($required in @('LICENSE', 'README.md', 'THIRD-PARTY-NOTICES.md', 'docs/INSTALL.md', 'docs/BUILD.md', 'unity/LICENSE', 'config/prototype-baseline-0.1.5.json', '.github/workflows/ci.yml', 'scripts/Test-Source.ps1')) {
+foreach ($required in @('LICENSE', 'README.md', 'THIRD-PARTY-NOTICES.md', 'docs/INSTALL.md', 'docs/BUILD.md', 'unity/LICENSE', 'config/prototype-baseline-0.2.0.json', '.github/workflows/ci.yml', 'scripts/Test-Source.ps1')) {
     if ($required -cnotin $sourceFiles) { throw "Required public source is excluded: $required" }
 }
 
-$baseline = Get-Content -LiteralPath (Join-Path $workspacePath 'config/prototype-baseline-0.1.5.json') -Raw | ConvertFrom-Json
-if ($baseline.schemaVersion -ne 1 -or $baseline.modVersion -cne '0.1.5' -or
+$baseline = Get-Content -LiteralPath (Join-Path $workspacePath 'config/prototype-baseline-0.2.0.json') -Raw | ConvertFrom-Json
+if ($baseline.schemaVersion -ne 1 -or $baseline.modVersion -cne '0.2.0' -or
     $baseline.unityVersion -cne '2022.3.62f2' -or $baseline.hashPolicy -cne 'png-bytes;other-files-utf8-lf-no-bom' -or
-    @($baseline.files).Count -ne 19) {
-    throw 'Expected the reviewed 0.1.5 baseline schema, versions, hash policy and 19 authored files.'
+    @($baseline.files).Count -ne 49) {
+    throw 'Expected the reviewed 0.2.0 baseline schema, versions, hash policy and 49 authored files.'
 }
 $modFolder = 'unity/Assets/Blueprinter/Mods/baanish-armory'
 $expected = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)

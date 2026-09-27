@@ -82,7 +82,7 @@ namespace BaanishArmory.Editor
                 if (!imported || errors.Count != 0)
                     throw new InvalidDataException("Game asset import failed: " + string.Join("\n", errors));
                 VerifyImportedReferences(map);
-                Debug.Log("[BaanishArmory] Verified 20 game asset GUIDs and 21 object references.");
+                Debug.Log("[BaanishArmory] Verified 28 game asset GUIDs and 29 object references.");
             }
             finally
             {
@@ -104,11 +104,11 @@ namespace BaanishArmory.Editor
             var mapPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../../config/game-asset-references.json"));
             RequireUnredirectedPath(mapPath);
             var map = JsonUtility.FromJson<ReferenceMap>(File.ReadAllText(mapPath));
-            if (map == null || map.schemaVersion != 1 || map.modVersion != "0.1.5" || map.gameVersion != "0.34.2" ||
-                map.assets == null || map.assets.Length != 20 ||
+            if (map == null || map.schemaVersion != 1 || map.modVersion != "0.2.0" || map.gameVersion != "0.34.2" ||
+                map.assets == null || map.assets.Length != 28 ||
                 map.assets.Any(asset => asset == null || asset.objects == null) ||
-                map.assets.Sum(asset => asset.objects.Length) != 21)
-                throw new InvalidDataException("Expected the reviewed 0.1.5 game asset reference map.");
+                map.assets.Sum(asset => asset.objects.Length) != 29)
+                throw new InvalidDataException("Expected the reviewed 0.2.0 game asset reference map.");
             return map;
         }
 
@@ -126,9 +126,9 @@ namespace BaanishArmory.Editor
 
         private static Dictionary<string, string> Preflight(string projectRoot, string exportRoot, ReferenceMap map, Func<string, string> findGuid)
         {
-            if (map == null || map.schemaVersion != 1 || map.modVersion != "0.1.5" || map.gameVersion != "0.34.2" ||
-                map.assets == null || map.assets.Length != 20)
-                throw new InvalidDataException("Expected the reviewed 0.1.5 game asset reference map.");
+            if (map == null || map.schemaVersion != 1 || map.modVersion != "0.2.0" || map.gameVersion != "0.34.2" ||
+                map.assets == null || map.assets.Length != 28)
+                throw new InvalidDataException("Expected the reviewed 0.2.0 game asset reference map.");
             RequireUnredirectedPath(projectRoot);
             RequireUnredirectedPath(exportRoot);
             if (!Directory.Exists(exportRoot))
@@ -176,8 +176,8 @@ namespace BaanishArmory.Editor
                     seeds.Add(meta, "fileFormatVersion: 2\nguid: " + asset.guid + "\n");
                 }
             }
-            if (objectCount != 21)
-                throw new InvalidDataException("Expected 21 reviewed game object references.");
+            if (objectCount != 29)
+                throw new InvalidDataException("Expected 29 reviewed game object references.");
             var exportPaths = map.assets.ToDictionary(asset => asset.path, asset => asset.exportPath, StringComparer.OrdinalIgnoreCase);
             foreach (var file in exportFiles)
             {
