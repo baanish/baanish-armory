@@ -292,12 +292,14 @@ namespace BaanishArmory.Editor
                         throw new InvalidDataException("Expected the Lance motor, fins, penetrator and GPO-500 fire armor.");
                     var burn = serialized.FindProperty("motors.Array.data[0].burnTime").floatValue;
                     var effects = References<ParticleSystem>(serialized, "motors.Array.data[0].particleSystems");
+                    var trails = References<Object>(serialized, "motors.Array.data[0].trailEmitters");
+                    if (effects.Count == 0 || trails.Count == 0)
+                        throw new InvalidDataException("Expected the Lance motor's flame effects and smoke trail.");
                     if (effects.Any(effect => !effect.main.loop && effect.main.duration < burn))
                         throw new InvalidDataException("A Lance motor effect stops before burnout.");
                     var sounds = References<AudioSource>(serialized, "motors.Array.data[0].audioSources");
                     if (sounds.Count != 2 || sounds.Count(sound => sound.loop) != 1)
                         throw new InvalidDataException("Expected the Lance motor's one-shot launch sound and a motor loop until burnout.");
-                    var trails = References<Object>(serialized, "motors.Array.data[0].trailEmitters");
                     if (trails.Any(trail => new SerializedObject(trail).FindProperty("emitLifetime").floatValue < burn))
                         throw new InvalidDataException("The Lance motor trail stops before burnout.");
                 }
