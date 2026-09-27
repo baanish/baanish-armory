@@ -232,9 +232,20 @@ for poly, uvs, smooth in zip(mesh.polygons, face_uvs, face_smooth):
     poly.material_index = int(poly.index >= first_window_face)
     for loop_index, coord in zip(poly.loop_indices, uvs):
         uv_layer.data[loop_index].uv = coord
+# Each section is its own unwelded ring set, so orienting them one by one can turn a lone ring (such as the
+# nozzle lip) inward. Orient a welded copy of the whole shell instead, where outward is unambiguous, and flip
+# the matching faces here. The game's materials are single-sided, so a flipped face is a hole.
 bm = bmesh.new()
 bm.from_mesh(mesh)
-bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+welded = bm.copy()
+bmesh.ops.remove_doubles(welded, verts=welded.verts, dist=1e-5)
+bmesh.ops.recalc_face_normals(welded, faces=welded.faces)
+if len(welded.faces) != len(bm.faces):
+    raise RuntimeError("welding the shell merged faces; section rings no longer line up")
+bm.normal_update()
+welded.normal_update()
+bmesh.ops.reverse_faces(bm, faces=[f for f, w in zip(bm.faces, welded.faces) if f.normal.dot(w.normal) < 0])
+welded.free()
 bm.to_mesh(mesh)
 bm.free()
 print(f"lance mesh: {len(mesh.vertices)} vertices, {sum(len(p.vertices) - 2 for p in mesh.polygons)} triangles")

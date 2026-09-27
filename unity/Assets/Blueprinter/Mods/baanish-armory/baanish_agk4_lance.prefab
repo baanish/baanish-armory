@@ -2489,7 +2489,7 @@ GameObject:
   - component: {fileID: 82589667821646929}
   - component: {fileID: 114372920208702427}
   - component: {fileID: 114025901758691103}
-  - component: {fileID: 5565309083123970751}
+  - component: {fileID: 8987820247666474797}
   m_Layer: 13
   m_Name: baanish_agk4_lance
   m_TagString: Untagged
@@ -2691,7 +2691,7 @@ MonoBehaviour:
     - {fileID: 114302127217294661}
     audioSources:
     - {fileID: 82589667821646929}
-    - {fileID: 5565309083123970751}
+    - {fileID: 8987820247666474797}
     startupSource: {fileID: 0}
     lights:
     - {fileID: 108336590748365959}
@@ -2964,7 +2964,7 @@ MonoBehaviour:
     Interval: 0.05
   extrapolationFactor: 1
   Missile: {fileID: 114044625135789424}
---- !u!82 &5565309083123970751
+--- !u!82 &8987820247666474797
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
