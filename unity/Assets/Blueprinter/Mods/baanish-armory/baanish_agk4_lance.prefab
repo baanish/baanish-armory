@@ -2333,7 +2333,7 @@ MonoBehaviour:
   emitTransform: {fileID: 4621510681728303}
   emitDelay: 0
   opacity: 0.5
-  emitLifetime: 2
+  emitLifetime: 5.65
 --- !u!1 &1703437598541787
 GameObject:
   m_ObjectHideFlags: 0
@@ -5313,7 +5313,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730242686860875}
   serializedVersion: 8
-  lengthInSec: 1.5
+  lengthInSec: 5.15
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0

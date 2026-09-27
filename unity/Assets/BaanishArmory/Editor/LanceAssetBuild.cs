@@ -147,6 +147,7 @@ namespace BaanishArmory.Editor
                     var so = new SerializedObject(component);
                     if (type == "Missile")
                     {
+                        StretchMotorEffects(so, so.FindProperty("motors.Array.data[0].burnTime").floatValue);
                         Set(so, "motors.Array.data[0].thrust", Thrust);
                         Set(so, "motors.Array.data[0].burnTime", BurnTime);
                         Set(so, "motors.Array.data[0].fuelMass", FuelMass);
@@ -184,6 +185,14 @@ namespace BaanishArmory.Editor
                 }
                 SetMaterials(root, folded, body, optics);
                 SetMaterials(root, pod, body, stencil);
+                // The copied capsule still fits the short, wide Kingpin pod; fit it to the Lance pod along Z.
+                var podFilter = root.GetComponentsInChildren<MeshFilter>(true).Single(filter => filter.sharedMesh == pod);
+                var capsule = podFilter.GetComponent<CapsuleCollider>() ?? throw new InvalidDataException("The pod has no capsule collider.");
+                var bounds = pod.bounds;
+                capsule.direction = 2;
+                capsule.center = bounds.center;
+                capsule.height = bounds.size.z;
+                capsule.radius = Mathf.Max(bounds.size.x, bounds.size.y) / 2;
             });
             AuthorHardpointOp();
             AssetDatabase.SaveAssets();
@@ -239,6 +248,29 @@ namespace BaanishArmory.Editor
                 PrefabUtility.SaveAsPrefabAsset(root, path);
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        // The copied motor's flame and trail are timed for the Kingpin's burn; run them for the whole Lance burn,
+        // keeping the trail's fade margin past burnout.
+        private static void StretchMotorEffects(SerializedObject missile, float stockBurnTime)
+        {
+            var systems = missile.FindProperty("motors.Array.data[0].particleSystems");
+            for (var i = 0; i < systems.arraySize; i++)
+            {
+                var system = (ParticleSystem)systems.GetArrayElementAtIndex(i).objectReferenceValue;
+                if (system.main.loop)
+                    continue;
+                var main = system.main;
+                main.duration = BurnTime;
+            }
+            var trails = missile.FindProperty("motors.Array.data[0].trailEmitters");
+            for (var i = 0; i < trails.arraySize; i++)
+            {
+                var trail = new SerializedObject(trails.GetArrayElementAtIndex(i).objectReferenceValue);
+                var lifetime = trail.FindProperty("emitLifetime");
+                lifetime.floatValue += BurnTime - stockBurnTime;
+                trail.ApplyModifiedPropertiesWithoutUndo();
+            }
         }
 
         private static void SetMaterials(GameObject root, Mesh mesh, params Material[] materials)

@@ -289,6 +289,18 @@ namespace BaanishArmory.Editor
                         serialized.FindProperty("armorProperties.fireArmor").floatValue != 6 ||
                         serialized.FindProperty("armorProperties.fireTolerance").floatValue != 0.3f)
                         throw new InvalidDataException("Expected the Lance motor, fins, penetrator and GPO-500 fire armor.");
+                    var burn = serialized.FindProperty("motors.Array.data[0].burnTime").floatValue;
+                    var systems = serialized.FindProperty("motors.Array.data[0].particleSystems");
+                    for (var i = 0; i < systems.arraySize; i++)
+                    {
+                        var main = ((ParticleSystem)systems.GetArrayElementAtIndex(i).objectReferenceValue).main;
+                        if (!main.loop && main.duration < burn)
+                            throw new InvalidDataException("A Lance motor effect stops before burnout.");
+                    }
+                    var trails = serialized.FindProperty("motors.Array.data[0].trailEmitters");
+                    for (var i = 0; i < trails.arraySize; i++)
+                        if (new SerializedObject(trails.GetArrayElementAtIndex(i).objectReferenceValue).FindProperty("emitLifetime").floatValue < burn)
+                            throw new InvalidDataException("The Lance motor trail stops before burnout.");
                 }
                 if (type == "LaserSeeker")
                 {
@@ -302,6 +314,11 @@ namespace BaanishArmory.Editor
             var pod = AssetDatabase.LoadAssetAtPath<GameObject>(ModFolder + "/baanish_agk4_lance_4pod.prefab");
             if (pod.GetComponentsInChildren<Component>(true).Count(component => component != null && component.GetType().FullName == "MountedMissile") != 4)
                 throw new InvalidDataException("Expected four physical Lance launchers per pod.");
+            var podFilter = pod.GetComponentsInChildren<MeshFilter>(true)
+                .Single(filter => filter.sharedMesh == AssetDatabase.LoadAssetAtPath<Mesh>(ModFolder + "/baanish_agk4_lance_4pod_mesh.asset"));
+            var capsule = podFilter.GetComponent<CapsuleCollider>();
+            if (capsule == null || capsule.direction != 2 || Mathf.Abs(capsule.height - podFilter.sharedMesh.bounds.size.z) > 0.01f)
+                throw new InvalidDataException("The Lance pod collider must span the pod's length.");
         }
 
         private static void ThrowBuildErrors(List<string> errors)
