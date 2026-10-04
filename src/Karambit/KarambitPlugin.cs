@@ -547,7 +547,7 @@ public sealed class KarambitPlugin : BaseUnityPlugin
             if (now >= nextTerrainCheck)
             {
                 nextTerrainCheck = now + 0.1f;
-                Unit? guidanceTarget = locked ?? designated;
+                Unit? guidanceTarget = locked != null ? locked : designated != null ? designated : null;
                 targetAltitudeAgl = knownPosition.y - SurfaceHeight(knownPosition);
                 targetAltitudeSource = "cue_terrain";
                 if (locked != null && now - lastReturnTime <= 0.5f)
