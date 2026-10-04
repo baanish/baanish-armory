@@ -34,8 +34,6 @@ docs/LANCE-CONCEPT.md
 docs/RELEASE-0.3.0.md
 docs/images/ifrit-karambit.webp
 docs/images/ifrit-scythe.webp
-docs/images/ifrit-karambit.webp
-docs/images/ifrit-scythe.webp
 scripts/Build-Karambit.ps1
 scripts/Build-Prototype.ps1
 scripts/Install-Karambit.ps1
