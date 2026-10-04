@@ -229,6 +229,8 @@ namespace BaanishArmory.Editor
                 if (!File.Exists(bundle) || new FileInfo(bundle).Length == 0)
                     throw new FileNotFoundException("Blueprinter did not produce the Karambit bundle.", bundle);
                 SourceExporter.ExportMod(ModName, ModName, Version, Path.Combine(output, ModName + "_" + Version + ".source.zip"));
+                if (errors.Count != 0)
+                    throw new InvalidDataException("Karambit source export failed:\n" + string.Join("\n", errors));
                 var manifestPath = BlueprinterSettings.GeneratedFolder + "/patch_manifest.json";
                 ValidateManifest(JsonUtility.FromJson<PatchManifest>(File.ReadAllText(manifestPath)));
                 File.Copy(manifestPath, Path.Combine(output, "patch_manifest.json"));
@@ -1005,8 +1007,12 @@ namespace BaanishArmory.Editor
                 throw new InvalidDataException("Expected the Karambit definition and all six mounts in the encyclopedia.");
         }
 
-        private static T Load<T>(string path) where T : Object =>
-            AssetDatabase.LoadAssetAtPath<T>(path) ?? throw new FileNotFoundException("Missing asset: " + path);
+        private static T Load<T>(string path) where T : Object
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset == null) throw new FileNotFoundException("Missing asset: " + path);
+            return asset;
+        }
 
         private static IEnumerable<Component> Components(GameObject root)
         {

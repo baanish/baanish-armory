@@ -15,6 +15,7 @@ $missionSource = Join-Path $workspace ".local/karambit-mission/$missionName"
 $bep = Join-Path $GameDir 'BepInEx'
 $pluginsPath = Join-Path $bep 'plugins'
 $destination = Join-Path $pluginsPath 'baanish-karambit-prototype'
+$metadataPath = Join-Path $destination 'meta.json'
 $missionDestination = Join-Path $MissionRoot $missionName
 $blueprinterEnabled = Join-Path $bep 'plugins/com.nikkorap.blueprinter'
 $blueprinterDisabled = Join-Path $bep 'disabledPlugins/com.nikkorap.blueprinter'
@@ -59,12 +60,15 @@ if ($Update) {
     if ($previous.prototype -ine $destination -or $previous.mission -ine $missionDestination) {
         throw 'The installation receipt belongs to different destination paths.'
     }
+    if (@($previous.files | Where-Object { $_.path -ieq $metadataPath }).Count -ne 1) {
+        throw 'The receipt does not verify prototype metadata. Remove the development prototype and saved mission, then reinstall without -Update to create a new receipt.'
+    }
     foreach ($file in $previous.files) {
         if ((Get-FileHash -LiteralPath $file.path).Hash.ToLowerInvariant() -cne $file.sha256) {
             throw "Installed file changed since installation: $($file.path)"
         }
     }
-    $oldMeta = Get-Content -LiteralPath (Join-Path $destination 'meta.json') -Raw | ConvertFrom-Json
+    $oldMeta = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
     if ($oldMeta.id -cne 'dev.baanish.karambit' -or
         @(Get-ChildItem -LiteralPath $destination -Force).Count -ne 3 -or
         @(Get-ChildItem -LiteralPath $missionDestination -Force).Count -ne 2) {
@@ -121,7 +125,8 @@ $meta = [ordered]@{
         hash = ('sha256:' + (Get-FileHash -LiteralPath $runtimeFiles[0].FullName).Hash.ToLowerInvariant())
     }
 }
-[IO.File]::WriteAllText((Join-Path $destination 'meta.json'), ($meta | ConvertTo-Json -Depth 5), [Text.UTF8Encoding]::new($false))
+[IO.File]::WriteAllText($metadataPath, ($meta | ConvertTo-Json -Depth 5), [Text.UTF8Encoding]::new($false))
+$receipt.files += [ordered]@{ path = $metadataPath; sha256 = (Get-FileHash -LiteralPath $metadataPath).Hash.ToLowerInvariant() }
 if (-not $Update) { New-Item -ItemType Directory -Path $missionDestination | Out-Null }
 foreach ($file in $missionFiles) {
     $target = Join-Path $missionDestination $file.Name
