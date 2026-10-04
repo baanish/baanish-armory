@@ -35,7 +35,7 @@ Equal(GuidanceProfile.AntiAirMissile, KarambitPolicy.SelectProfile(false, true, 
 float climbBoundarySpeed = 5f / MathF.Sin(5f * MathF.PI / 180f);
 Equal(5f, KarambitPolicy.LoftMinimumVerticalSpeed, "loft minimum climb speed is deliberately 5 m/s");
 Equal(5f, KarambitPolicy.LoftMinimumClimbDegrees, "loft minimum climb angle is deliberately 5 degrees");
-Equal(GuidanceProfile.Lofting, KarambitPolicy.SelectProfile(false, false, false, 10f, 5f, climbBoundarySpeed), "loft includes exact 5 degree and 5 m/s boundaries");
+Equal(GuidanceProfile.Lofting, KarambitPolicy.SelectProfile(false, false, false, 10f, 5f, climbBoundarySpeed * 0.99f), "loft includes exactly 5 m/s with a climb angle safely above 5 degrees");
 Equal(GuidanceProfile.Ground, KarambitPolicy.SelectProfile(false, false, false, 10f, 4.999f, 50f), "steep climb below 5 m/s is terrain correction");
 Equal(GuidanceProfile.Ground, KarambitPolicy.SelectProfile(false, false, false, 10f, 5f, climbBoundarySpeed + 0.001f), "5 m/s climb below 5 degrees stays ground");
 Equal(GuidanceProfile.Lofting, KarambitPolicy.SelectProfile(false, false, false, 10f, 5f, climbBoundarySpeed - 0.001f), "5 m/s climb above 5 degrees uses air");

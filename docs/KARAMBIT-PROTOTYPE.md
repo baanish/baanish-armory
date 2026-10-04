@@ -46,7 +46,7 @@ From the repository root in PowerShell 7:
 
 ```powershell
 ./scripts/Build-Karambit.ps1
-./scripts/New-KarambitMission.ps1
+./scripts/New-KarambitMission.ps1 -Template 'X:/NO-Agentic-Framework/templates/airborne.mission.json'
 ./scripts/Install-Karambit.ps1
 ```
 
@@ -56,7 +56,7 @@ The development installer adds `BepInEx/plugins/baanish-karambit-prototype`, ena
 
 For runtime changes, use `Build-Karambit.ps1 -RuntimeOnly` to reuse the verified bundle. Close the game, regenerate the mission if it changed, then use `Install-Karambit.ps1 -Update`. Updates verify the previous installation receipt and back up the installed prototype and mission under `.local/karambit-backups` before replacing their files.
 
-Pass `-GameDir` and `-UnityPath` to the build script for other installations. Pass `-Template` to the mission generator to select another checkout's `templates/airborne.mission.json`.
+Pass `-GameDir` and `-UnityPath` to the build script for other installations. The mission generator requires `-Template` with a native JsonVersion 6 airborne Ifrit template, such as a framework checkout's `templates/airborne.mission.json`. It generates local files and reports the intended game destination without installing them. Pass `-MissionRoot` to report another mission directory, and pass the same directory to `Install-Karambit.ps1` when installing. The default is the current user's `AppData/LocalLow/Shockfront/NuclearOption/Missions` directory.
 
 ## Model budget
 

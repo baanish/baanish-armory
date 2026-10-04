@@ -13,7 +13,8 @@ $build = Join-Path $workspace '.local/karambit-build'
 $missionName = 'SAAM-18 Karambit - Ignus Interception'
 $missionSource = Join-Path $workspace ".local/karambit-mission/$missionName"
 $bep = Join-Path $GameDir 'BepInEx'
-$destination = Join-Path $bep 'plugins/baanish-karambit-prototype'
+$pluginsPath = Join-Path $bep 'plugins'
+$destination = Join-Path $pluginsPath 'baanish-karambit-prototype'
 $missionDestination = Join-Path $MissionRoot $missionName
 $blueprinterEnabled = Join-Path $bep 'plugins/com.nikkorap.blueprinter'
 $blueprinterDisabled = Join-Path $bep 'disabledPlugins/com.nikkorap.blueprinter'
@@ -27,6 +28,15 @@ function Assert-PlainPath([string]$Path) {
 }
 foreach ($path in @($build, $missionSource, $destination, $missionDestination, $blueprinterEnabled, $blueprinterDisabled)) {
     Assert-PlainPath $path
+}
+if (Test-Path -LiteralPath $pluginsPath) {
+    $destinationPrefix = [IO.Path]::TrimEndingDirectorySeparator([IO.Path]::GetFullPath($destination)) + [IO.Path]::DirectorySeparatorChar
+    foreach ($file in Get-ChildItem -LiteralPath $pluginsPath -File -Recurse -Force) {
+        if ($file.Name -in @('Baanish.Karambit.dll', 'baanish-karambit-prototype_0.1.0.nobp') -and
+            -not [IO.Path]::GetFullPath($file.FullName).StartsWith($destinationPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Karambit is already enabled outside the prototype destination: $($file.FullName)"
+        }
+    }
 }
 if (Get-Process -Name NuclearOption -ErrorAction SilentlyContinue) { throw 'Close Nuclear Option before installing.' }
 $runtimeFiles = @(Get-ChildItem -LiteralPath (Join-Path $build 'runtime') -Filter '*.dll')
@@ -105,7 +115,7 @@ $meta = [ordered]@{
     artifact = [ordered]@{
         fileName = $runtimeFiles[0].Name
         version = '0.3.0'
-        category = 'prerelease'
+        category = 'preRelease'
         type = 'plugin'
         gameVersion = '0.34.2'
         hash = ('sha256:' + (Get-FileHash -LiteralPath $runtimeFiles[0].FullName).Hash.ToLowerInvariant())

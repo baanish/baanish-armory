@@ -1,7 +1,8 @@
 #Requires -Version 7.2
 [CmdletBinding()]
 param(
-    [string]$Template = 'E:/Development/NO-Agentic-Framework/templates/airborne.mission.json',
+    [Parameter(Mandatory)][string]$Template,
+    [string]$MissionRoot = (Join-Path $env:USERPROFILE 'AppData/LocalLow/Shockfront/NuclearOption/Missions'),
     [switch]$CheckOnly
 )
 
@@ -149,7 +150,7 @@ foreach ($file in $files.GetEnumerator()) {
 if ([IO.File]::ReadAllText($Template) -cne $templateJson) { throw 'Source template changed during generation.' }
 [ordered]@{
     name = $name; fixture = $fixture; missionFolder = $humanMission
-    destination = 'C:/Users/bhiru/AppData/LocalLow/Shockfront/NuclearOption/Missions/' + $name
+    destination = [IO.Path]::GetFullPath((Join-Path $MissionRoot $name), $PWD.Path)
     altitudeFeet = 2000; altitudeMeters = 609.6; karambitCount = 20; scytheCount = 4; scytheRackCount = 2; incomingCount = 20; inboundDistanceNm = 13; inboundDistanceMeters = 24076; initialCueSeconds = 3; nativeFallbackSpeedMps = 350.0
     medusaName = 'Karambit_Medusa'; medusaAltitudeMeters = 750; medusaRadomeKey = 'Radome1'; medusaAradCount = 2
     sourceSha256 = (Get-FileHash -LiteralPath $Template -Algorithm SHA256).Hash
