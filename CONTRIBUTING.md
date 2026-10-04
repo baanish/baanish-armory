@@ -4,18 +4,20 @@ Bug reports, balance feedback and contributions are welcome. Talk to me before s
 
 ## Models and art
 
-I used AI for the custom art because I don't have the skills to make it myself. GPT-6 Astra made the Eyeball-XL's art and Claude Opus 5.5 made the AGK-4 Lance's. If you want to contribute human-made models or artwork, I'd like to talk about it.
+I used AI for the custom art because I don't have the skills to make it myself. GPT-6 Astra made the Eyeball-XL's art and Claude Opus 5.5 made the AGK-4 Lance's. Karambit's model and icon are generated procedurally from `art/source/karambit`, using supplied shape references. If you want to contribute human-made models or artwork, I'd like to talk about it.
 
 For Eyeball-XL, I want to keep the ARAD-sized body and three recessed windows on the lower nose. The centre window faces straight down. The side windows face down and outward at 45 degrees. The upper nose stays clear. Please discuss changes to that shape before making a finished model.
 
 Scripts in `art/source/lance` generate the Lance's model, pod, icon and stencil, and its dimensions live in `lance_shape.py`. The length and diameter are repeated in `lance_pod.py` (`LANCE_LENGTH` and `SLIM`) and in `LanceAssetBuild.cs` (`Length` and `Diameter`, which size the collider and launch rail), and the length is also in the rail check in `PrototypeBuild.cs`, so change them together. To change the Lance, edit those scripts and rebuild as the [build guide](docs/BUILD.md#rebuild-the-agk-4-lance-assets) describes. Don't edit its exported meshes by hand, since the next rebuild overwrites them.
 
+Karambit's source is `art/source/karambit/build_karambit.py`. Keep its 1.8148 m length, 120 mm body and two matte blue bands unless we agree on a design change. Its stock Weapons4 material and adapted Scythe rails and adapters remain game assets. Edit the generator and rebuild instead of changing exported meshes by hand. The [Karambit notes](docs/KARAMBIT-PROTOTYPE.md) describe the model budget and rack constraints.
+
 Include editable source files and explain which parts you created and which depend on existing game assets. Don't submit extracted game textures, assemblies, asset dumps or third-party reference photographs as original contributions.
 
 ## Code and testing
 
-Keep changes focused and explain what they fix. Tell me what you tested in game, such as equipping, launching, spotting or rearming. If you tested multiplayer, say so.
+Keep changes focused and explain what they fix. Tell me what you tested in game, such as equipping, launching, spotting or rearming. Name the motor balance and rack variant for Karambit flight tests. Earlier automated salvo checks do not validate the release's 900 m/s allocation or Revoker six-round rack. If you tested multiplayer, say so.
 
-Follow the [build guide](docs/BUILD.md) to set up the Unity project. The build checks the mod assets against a list of file hashes. If you change those assets, update `config/prototype-baseline-0.2.0.json` in the same change so I can review both together.
+Follow the [build guide](docs/BUILD.md) to set up the Unity project. The build checks the mod assets against a list of file hashes. If you change those assets, update `config/prototype-baseline-0.3.0.json` in the same change so I can review both together.
 
 Run `./scripts/Test-Source.ps1` before submitting a change. GitHub runs the same source checks on pushes and pull requests. Unity builds happen locally, so make any release build on your own prepared PC.

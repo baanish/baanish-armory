@@ -20,3 +20,7 @@ jobs:
           persist-credentials: false
       - name: Validate public source
         run: ./scripts/Test-Source.ps1
+      - name: Verify Karambit seeker policy
+        run: dotnet run --project tests/Karambit/Karambit.Tests.csproj -c Release
+      - name: Verify release packaging
+        run: ./tests/Release/PrepareRelease.Tests.ps1

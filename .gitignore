@@ -2,6 +2,8 @@
 /PROGRESS.md
 /art/references/*
 !/art/references/eyeball-xl-lineart-clean-reference.png
+!/art/references/karambit-angled-rack-sketch.png
+!/art/references/karambit-upward-radar-sketch.png
 /art/source/*.blend*
 /art/source/eyeball-xl-loadout-lineart*.svg
 /docs/WEAPON-INSPECTION.md
@@ -10,7 +12,14 @@
 !/scripts/Prepare-Release.ps1
 !/scripts/Test-Source.ps1
 !/scripts/Publish-Release.ps1
+!/scripts/Build-Karambit.ps1
+!/scripts/New-KarambitMission.ps1
+!/scripts/New-KarambitSalvoTest.ps1
+!/scripts/New-KarambitStockMission.ps1
+!/scripts/Install-Karambit.ps1
 __pycache__/
+**/bin/
+/.agentic/
 
 # Unity caches and machine-specific state.
 **/[Ll]ibrary/

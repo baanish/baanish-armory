@@ -1,0 +1,349 @@
+{
+  "mission": "karambit-salvo.mission.json",
+  "checks": [
+    "karambit_salvo.cs"
+  ],
+  "mods": "clean",
+  "plugins": [
+    "installed:com.nikkorap.blueprinter",
+    "../../.local/karambit-build/runtime",
+    "../../.local/karambit-build/salvo-control",
+    "content:../../.local/karambit-build/baanish-karambit-prototype_0.1.0.nobp host=com.nikkorap.blueprinter keys=baanish_karambit,baanish_karambit_6_internal,baanish_karambit_4_external"
+  ],
+  "timeout": 150,
+  "steps": [
+    {
+      "require": {
+        "path": "own.type",
+        "eq": "Multirole1"
+      },
+      "label": "the player is in the Ifrit"
+    },
+    {
+      "fly": {
+        "mode": "hold",
+        "alt_msl_m": 609.6,
+        "hdg_deg": 0,
+        "throttle": 0.7
+      }
+    },
+    {
+      "act": {
+        "station": 1
+      }
+    },
+    {
+      "require": {
+        "all": [
+          {
+            "path": "own.station.name",
+            "eq": "SAAM-18 Karambit"
+          },
+          {
+            "path": "own.station.ammo",
+            "eq": 20
+          }
+        ]
+      },
+      "label": "the derivative Ifrit has exactly twenty Karambits"
+    },
+    {
+      "wait": {
+        "path": "mods.dev.baanish.karambit.inbound_warmstarts",
+        "eq": 20
+      },
+      "timeout": 10,
+      "label": "all twenty native inbounds started in flight"
+    },
+    {
+      "wait": {
+        "all": [
+          {
+            "path": "contacts.Karambit_Inbound_01.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_01.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_02.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_02.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_03.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_03.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_04.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_04.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_05.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_05.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_06.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_06.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_07.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_07.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_08.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_08.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_09.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_09.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_10.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_10.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_11.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_11.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_12.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_12.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_13.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_13.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_14.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_14.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_15.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_15.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_16.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_16.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_17.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_17.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_18.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_18.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_19.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_19.range_m",
+            "lt": 22224
+          },
+          {
+            "path": "contacts.Karambit_Inbound_20.live",
+            "eq": true
+          },
+          {
+            "path": "contacts.Karambit_Inbound_20.range_m",
+            "lt": 22224
+          }
+        ]
+      },
+      "timeout": 35,
+      "label": "all twenty incoming tracks are live inside the 12 nm envelope"
+    },
+    {
+      "config": {
+        "guid": "dev.baanish.karambit.salvo-test",
+        "section": "Test",
+        "key": "SelectSalvo",
+        "value": true
+      }
+    },
+    {
+      "wait": {
+        "all": [
+          {
+            "path": "mods.dev.baanish.karambit.salvo-test.selected_count",
+            "eq": 20
+          },
+          {
+            "path": "mods.dev.baanish.karambit.salvo-test.selected_distinct_count",
+            "eq": 20
+          },
+          {
+            "path": "mods.dev.baanish.karambit.salvo-test.selected_names",
+            "eq": "Karambit_Inbound_01 Karambit_Inbound_02 Karambit_Inbound_03 Karambit_Inbound_04 Karambit_Inbound_05 Karambit_Inbound_06 Karambit_Inbound_07 Karambit_Inbound_08 Karambit_Inbound_09 Karambit_Inbound_10 Karambit_Inbound_11 Karambit_Inbound_12 Karambit_Inbound_13 Karambit_Inbound_14 Karambit_Inbound_15 Karambit_Inbound_16 Karambit_Inbound_17 Karambit_Inbound_18 Karambit_Inbound_19 Karambit_Inbound_20"
+          },
+          {
+            "path": "mods.dev.baanish.karambit.salvo-test.error",
+            "eq": ""
+          },
+          {
+            "path": "own.target.count",
+            "eq": 20
+          },
+          {
+            "path": "own.target",
+            "eq": "Karambit_Inbound_01 Karambit_Inbound_02 Karambit_Inbound_03 Karambit_Inbound_04 Karambit_Inbound_05 Karambit_Inbound_06 Karambit_Inbound_07 Karambit_Inbound_08 Karambit_Inbound_09 Karambit_Inbound_10 Karambit_Inbound_11 Karambit_Inbound_12 Karambit_Inbound_13 Karambit_Inbound_14 Karambit_Inbound_15 Karambit_Inbound_16 Karambit_Inbound_17 Karambit_Inbound_18 Karambit_Inbound_19 Karambit_Inbound_20"
+          }
+        ]
+      },
+      "timeout": 2,
+      "label": "the actual native HUD and weapon lists contain all twenty distinct tracks"
+    },
+    {
+      "wait": {
+        "path": "own.station.ready",
+        "eq": true
+      },
+      "timeout": 10,
+      "label": "the selected weapon can start its native salvo"
+    },
+    {
+      "require": {
+        "path": "truth.missiles.count",
+        "eq": 20
+      },
+      "label": "all twenty incoming missiles are alive before the trigger"
+    },
+    {
+      "mark": {
+        "label": "salvo"
+      }
+    },
+    {
+      "act": {
+        "fire": 5
+      }
+    },
+    {
+      "wait": {
+        "path": "mods.dev.baanish.karambit.salvo-test.mission_time_s",
+        "between": [
+          45,
+          50
+        ]
+      },
+      "timeout": 50,
+      "label": "measure at 45 s before the patrol boat can engage the incoming missiles"
+    },
+    {
+      "check": {
+        "custom": {
+          "name": "CruiseSalvoObserved",
+          "args": {
+            "since": "salvo"
+          }
+        }
+      },
+      "within": 1,
+      "label": "report original inbound survivors and actual launches before asserting success"
+    },
+    {
+      "record": {
+        "path": "truth.missiles.count"
+      },
+      "label": "uncapped final live missile count, including remaining Karambits"
+    },
+    {
+      "record": {
+        "path": "own.station.ammo"
+      },
+      "label": "ammunition remaining after the continuous trigger"
+    },
+    {
+      "record": {
+        "path": "mods.dev.baanish.karambit.salvo-test.mission_time_s"
+      },
+      "label": "native mission time of the survivor measurement"
+    },
+    {
+      "screenshot": {
+        "name": "karambit-salvo-result"
+      }
+    },
+    {
+      "require": {
+        "custom": {
+          "name": "CruiseSalvoDestroyed",
+          "args": {
+            "since": "salvo"
+          }
+        }
+      },
+      "label": "twenty distinct designated launches remove all twenty original AShM-300s before boat defense range"
+    }
+  ]
+}

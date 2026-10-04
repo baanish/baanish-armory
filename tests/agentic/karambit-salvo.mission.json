@@ -1,0 +1,808 @@
+{
+  "JsonVersion": 6,
+  "MapKey": {
+    "Type": "GameWorldPrefab",
+    "Path": "Terrain_naval"
+  },
+  "missionSettings": {
+    "description": "SAAM-18 Karambit prototype: Ifrit at 2,000 ft (609.6 m) over the western Ignus sea, heading north at 220 m/s, carrying 20 Karambits for one native twenty-target salvo. A friendly EW-25 Medusa starts 5 km west and 2 km behind you at 750 m MSL, carrying a Radome and two ARAD-116s. It patrols around a point 5 km west and 2 km ahead while its radar shares contacts with Primeva. The incoming optical-guided missiles present no ARAD target. Twenty Boscali AShM-300s start 13 nautical miles (24.076 km) ahead at the stock maximum cruise speed and fly toward the friendly patrol boat 6 km behind you. A one-time initial datalink cue reveals the salvo after 3 seconds so you can designate incoming tracks. The prototype runtime initializes their cruise state; the native file carries 350 m/s as its fallback. Select incoming tracks and defend the boat. Restart Mission resets the salvo and ammunition. The patrol boat has short-range gun defenses.",
+    "allowEventContent": false,
+    "Tags": [],
+    "playerMode": "Singleplayer",
+    "allowRespawn": true,
+    "playerStartingRank": 6,
+    "rankMultiplier": 1.0,
+    "successfulSortieBonus": 0.25,
+    "nuclearEscalationThreshold": 0.0,
+    "strategicEscalationThreshold": 0.0,
+    "minRankTacticalWarhead": 0,
+    "minRankStrategicWarhead": 0,
+    "cameraStartPosition": {
+      "IsOverride": false,
+      "Value": {
+        "Position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "Rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        }
+      }
+    },
+    "missionRoads": {
+      "roads": []
+    },
+    "missionSeaLanes": {
+      "roads": []
+    },
+    "wrecksMaxNumber": 0,
+    "wrecksDecayTime": 0.0
+  },
+  "environment": {
+    "timeOfDay": 12.0,
+    "timeFactor": 0.0,
+    "weatherIntensity": 0.0,
+    "cloudAltitude": 1800.0,
+    "windSpeed": 0.0,
+    "windTurbulence": 0.0,
+    "windHeading": 0.0,
+    "windRandomHeading": 0.0,
+    "moonPhase": 14.0
+  },
+  "aircraft": [
+    {
+      "type": "Multirole1",
+      "faction": "Primeva",
+      "UniqueName": "Karambit_Ifrit",
+      "globalPosition": {
+        "x": -60000.0,
+        "y": 609.6,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "CaptureStrength": {
+        "IsOverride": false,
+        "Value": 0.0
+      },
+      "CaptureDefense": {
+        "IsOverride": false,
+        "Value": 0.0
+      },
+      "playerControlled": true,
+      "playerControlledPriority": 0,
+      "savedLoadout": {
+        "Selected": [
+          {
+            "Key": "autocannon_27mm_internal"
+          },
+          {
+            "Key": "baanish_karambit_6_internal"
+          },
+          {
+            "Key": "baanish_karambit_6_internal"
+          },
+          {
+            "Key": ""
+          },
+          {
+            "Key": "baanish_karambit_4_external"
+          },
+          {
+            "Key": ""
+          },
+          {
+            "Key": "TailHook_Multirole1"
+          }
+        ]
+      },
+      "livery": 0,
+      "liveryType": "Builtin",
+      "liveryName": "",
+      "fuel": 1.0,
+      "skill": 1.0,
+      "bravery": 0.5,
+      "startingSpeed": 220.0
+    },
+    {
+      "type": "EW1",
+      "faction": "Primeva",
+      "UniqueName": "Karambit_Medusa",
+      "globalPosition": {
+        "x": -65000.0,
+        "y": 750.0,
+        "z": -2000.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "CaptureStrength": {
+        "IsOverride": false,
+        "Value": 0.0
+      },
+      "CaptureDefense": {
+        "IsOverride": false,
+        "Value": 0.0
+      },
+      "playerControlled": false,
+      "playerControlledPriority": 1,
+      "savedLoadout": {
+        "Selected": [
+          {
+            "Key": ""
+          },
+          {
+            "Key": ""
+          },
+          {
+            "Key": "Radome1"
+          },
+          {
+            "Key": ""
+          },
+          {
+            "Key": "ARM1_single"
+          }
+        ]
+      },
+      "livery": 0,
+      "liveryType": "Builtin",
+      "liveryName": "",
+      "fuel": 1.0,
+      "skill": 1.0,
+      "bravery": 0.0,
+      "startingSpeed": 220.0
+    }
+  ],
+  "vehicles": [],
+  "ships": [
+    {
+      "type": "PatrolBoat1",
+      "faction": "Primeva",
+      "UniqueName": "Karambit_Target",
+      "globalPosition": {
+        "x": -60000.0,
+        "y": 2.5,
+        "z": -6000.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "holdPosition": true,
+      "skill": 0.0,
+      "waypoints": []
+    }
+  ],
+  "buildings": [],
+  "scenery": [],
+  "containers": [],
+  "missiles": [
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_01",
+      "globalPosition": {
+        "x": -60900.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99988814,
+        "z": 0.0,
+        "w": 0.01495707
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_02",
+      "globalPosition": {
+        "x": -60700.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99993231,
+        "z": 0.0,
+        "w": 0.01163482
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_03",
+      "globalPosition": {
+        "x": -60500.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99996546,
+        "z": 0.0,
+        "w": 0.00831141
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_04",
+      "globalPosition": {
+        "x": -60300.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99998756,
+        "z": 0.0,
+        "w": 0.00498718
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_05",
+      "globalPosition": {
+        "x": -60100.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99999862,
+        "z": 0.0,
+        "w": 0.00166245
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_06",
+      "globalPosition": {
+        "x": -59900.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99999862,
+        "z": 0.0,
+        "w": 0.00166245
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_07",
+      "globalPosition": {
+        "x": -59700.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99998756,
+        "z": 0.0,
+        "w": 0.00498718
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_08",
+      "globalPosition": {
+        "x": -59500.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99996546,
+        "z": 0.0,
+        "w": 0.00831141
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_09",
+      "globalPosition": {
+        "x": -59300.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99993231,
+        "z": 0.0,
+        "w": 0.01163482
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_10",
+      "globalPosition": {
+        "x": -59100.0,
+        "y": 12.0,
+        "z": 24076.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99988814,
+        "z": 0.0,
+        "w": 0.01495707
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_11",
+      "globalPosition": {
+        "x": -60900.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99989069,
+        "z": 0.0,
+        "w": 0.01478513
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_12",
+      "globalPosition": {
+        "x": -60700.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99993386,
+        "z": 0.0,
+        "w": 0.01150104
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_13",
+      "globalPosition": {
+        "x": -60500.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99996625,
+        "z": 0.0,
+        "w": 0.00821582
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_14",
+      "globalPosition": {
+        "x": -60300.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99998785,
+        "z": 0.0,
+        "w": 0.00492981
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_15",
+      "globalPosition": {
+        "x": -60100.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.99999865,
+        "z": 0.0,
+        "w": 0.00164332
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_16",
+      "globalPosition": {
+        "x": -59900.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99999865,
+        "z": 0.0,
+        "w": 0.00164332
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_17",
+      "globalPosition": {
+        "x": -59700.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99998785,
+        "z": 0.0,
+        "w": 0.00492981
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_18",
+      "globalPosition": {
+        "x": -59500.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99996625,
+        "z": 0.0,
+        "w": 0.00821582
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_19",
+      "globalPosition": {
+        "x": -59300.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99993386,
+        "z": 0.0,
+        "w": 0.01150104
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    },
+    {
+      "type": "AShM1",
+      "faction": "Boscali",
+      "UniqueName": "Karambit_Inbound_20",
+      "globalPosition": {
+        "x": -59100.0,
+        "y": 12.0,
+        "z": 24426.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": -0.99989069,
+        "z": 0.0,
+        "w": 0.01478513
+      },
+      "startingSpeed": 350.0,
+      "targetUnitName": "Karambit_Target",
+      "guidingUnit": ""
+    }
+  ],
+  "pilots": [],
+  "factions": [
+    {
+      "factionName": "Boscali",
+      "preventJoin": true,
+      "preventDonation": true,
+      "supplies": [
+        {
+          "UnitType": "Multirole1",
+          "Count": 99
+        }
+      ],
+      "startingBalance": 999999.0,
+      "playerJoinAllowance": 9999.0,
+      "playerTaxRate": 0.2,
+      "regularIncome": 0.0,
+      "excessFundsDistributePercent": 0.25,
+      "killReward": 1.0,
+      "airSkillMultiplier": 1.0,
+      "surfaceSkillMultiplier": 1.0,
+      "startingWarheads": 0,
+      "reserveWarheads": 0,
+      "reserveAirframes": 0,
+      "extraReservesPerPlayer": 0,
+      "AIAircraftLimit": 0,
+      "reduceAIPerFriendlyPlayer": 0.0,
+      "addAIPerEnemyPlayer": 0.0,
+      "restrictions": {
+        "aircraft": [],
+        "weapons": []
+      },
+      "cameraStartPosition": {
+        "IsOverride": false,
+        "Value": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      }
+    },
+    {
+      "factionName": "Primeva",
+      "preventJoin": false,
+      "preventDonation": true,
+      "supplies": [
+        {
+          "UnitType": "Multirole1",
+          "Count": 99
+        }
+      ],
+      "startingBalance": 999999.0,
+      "playerJoinAllowance": 9999.0,
+      "playerTaxRate": 0.2,
+      "regularIncome": 0.0,
+      "excessFundsDistributePercent": 0.25,
+      "killReward": 1.0,
+      "airSkillMultiplier": 1.0,
+      "surfaceSkillMultiplier": 1.0,
+      "startingWarheads": 0,
+      "reserveWarheads": 0,
+      "reserveAirframes": 0,
+      "extraReservesPerPlayer": 0,
+      "AIAircraftLimit": 0,
+      "reduceAIPerFriendlyPlayer": 0.0,
+      "addAIPerEnemyPlayer": 0.0,
+      "restrictions": {
+        "aircraft": [],
+        "weapons": []
+      },
+      "cameraStartPosition": {
+        "IsOverride": false,
+        "Value": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      }
+    }
+  ],
+  "airbases": [],
+  "objectives": [
+    {
+      "Type": "None",
+      "UniqueName": "Mission Start",
+      "Faction": "",
+      "DisplayName": "Mission Start",
+      "Hidden": true,
+      "Outcomes": [
+        "Karambit Start Timers"
+      ]
+    },
+    {
+      "Type": "WaitSeconds",
+      "UniqueName": "Karambit Reveal Target",
+      "Faction": "Boscali",
+      "DisplayName": "",
+      "Hidden": true,
+      "seconds": 1.0,
+      "Outcomes": [
+        "Karambit Target Track"
+      ]
+    },
+    {
+      "Type": "WaitSeconds",
+      "UniqueName": "Karambit Start Salvo",
+      "Faction": "Boscali",
+      "DisplayName": "",
+      "Hidden": true,
+      "seconds": 2.0,
+      "Outcomes": [
+        "Karambit Spawn Salvo"
+      ]
+    },
+    {
+      "Type": "WaitSeconds",
+      "UniqueName": "Karambit Initial Cue",
+      "Faction": "Primeva",
+      "DisplayName": "",
+      "Hidden": true,
+      "seconds": 3.0,
+      "Outcomes": [
+        "Karambit Reveal Salvo"
+      ]
+    },
+    {
+      "Type": "ReachWaypoints",
+      "UniqueName": "Karambit Medusa Patrol",
+      "Faction": "Primeva",
+      "DisplayName": "",
+      "Hidden": true,
+      "Outcomes": [],
+      "completeOrder": "InOrder",
+      "completeSomePercent": 0.5,
+      "completeOnEnterRange": true,
+      "waypoints": [
+        {
+          "Position": {
+            "x": -65000.0,
+            "y": 750.0,
+            "z": 2000.0
+          },
+          "Range": 0.0
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "Type": "StartObjective",
+      "UniqueName": "Karambit Start Timers",
+      "objectivesToStart": [
+        "Karambit Reveal Target",
+        "Karambit Start Salvo",
+        "Karambit Initial Cue",
+        "Karambit Medusa Patrol"
+      ]
+    },
+    {
+      "Type": "RevealUnit",
+      "UniqueName": "Karambit Target Track",
+      "UnitsToReveal": [
+        "Karambit_Target"
+      ]
+    },
+    {
+      "Type": "SpawnUnit",
+      "UniqueName": "Karambit Spawn Salvo",
+      "UnitsToSpawn": [
+        "Karambit_Inbound_01",
+        "Karambit_Inbound_02",
+        "Karambit_Inbound_03",
+        "Karambit_Inbound_04",
+        "Karambit_Inbound_05",
+        "Karambit_Inbound_06",
+        "Karambit_Inbound_07",
+        "Karambit_Inbound_08",
+        "Karambit_Inbound_09",
+        "Karambit_Inbound_10",
+        "Karambit_Inbound_11",
+        "Karambit_Inbound_12",
+        "Karambit_Inbound_13",
+        "Karambit_Inbound_14",
+        "Karambit_Inbound_15",
+        "Karambit_Inbound_16",
+        "Karambit_Inbound_17",
+        "Karambit_Inbound_18",
+        "Karambit_Inbound_19",
+        "Karambit_Inbound_20"
+      ]
+    },
+    {
+      "Type": "RevealUnit",
+      "UniqueName": "Karambit Reveal Salvo",
+      "UnitsToReveal": [
+        "Karambit_Inbound_01",
+        "Karambit_Inbound_02",
+        "Karambit_Inbound_03",
+        "Karambit_Inbound_04",
+        "Karambit_Inbound_05",
+        "Karambit_Inbound_06",
+        "Karambit_Inbound_07",
+        "Karambit_Inbound_08",
+        "Karambit_Inbound_09",
+        "Karambit_Inbound_10",
+        "Karambit_Inbound_11",
+        "Karambit_Inbound_12",
+        "Karambit_Inbound_13",
+        "Karambit_Inbound_14",
+        "Karambit_Inbound_15",
+        "Karambit_Inbound_16",
+        "Karambit_Inbound_17",
+        "Karambit_Inbound_18",
+        "Karambit_Inbound_19",
+        "Karambit_Inbound_20"
+      ]
+    }
+  ]
+}

@@ -6,6 +6,8 @@ For Eyeball-XL, I adapted the ARAD-116's geometry and flight settings and the Ey
 
 The Lance pod's AGK-4 stencil is original art that covers the stock "AGR-24" marking. No modified game texture ships with the mod.
 
+The SAAM-18 Karambit uses adapted AAM-29 Scythe flight settings, mounting rails and rack adapters. Its procedural body follows supplied shape references and uses the stock Weapons4 material and texture atlas at runtime, including the two matte blue paint bands. The adapted rails and serialized settings contain copied game geometry and values. No extracted Weapons4 texture ships with the mod. The generator and HUD icon source are in `art/source/karambit`.
+
 The Blueprinter Unity template is copyright 2026 Nikkorap and is provided under its MIT license in `unity/LICENSE`. Blueprinter Editor is pinned as a Unity package dependency. BepInEx, the Blueprinter runtime and Unity packages are separate dependencies and aren't included in the manual-install package.
 
-I used AI for all the custom art because I don't have the skills to make the models and artwork myself. GPT-6 Astra made the Eyeball-XL's art and Claude Opus 5.5 made the Lance's. The reused game assets were made by their original creators. I'm open to discussing contributions of human-made models and art.
+I used AI for all the custom art because I don't have the skills to make the models and artwork myself. GPT-6 Astra made the Eyeball-XL's art and Claude Opus 5.5 made the Lance's. Karambit's art is generated procedurally using supplied references. The reused game assets were made by their original creators. I'm open to discussing contributions of human-made models and art.

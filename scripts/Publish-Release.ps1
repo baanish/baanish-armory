@@ -2,6 +2,7 @@
 [CmdletBinding()]
 param(
     [string]$UnityPath,
+    [string]$GameDir = 'D:/SteamLibrary/steamapps/common/Nuclear Option',
     [string]$NotesFile,
     [switch]$Publish
 )
@@ -46,7 +47,11 @@ try {
 
     $buildDirectory = & (Join-Path $PSScriptRoot 'Build-Prototype.ps1') -UnityPath $UnityPath -PassThru
     if (-not $buildDirectory -or $buildDirectory -is [array]) { throw 'Build did not return exactly one output directory.' }
-    $releaseDirectory = & (Join-Path $PSScriptRoot 'Prepare-Release.ps1') -BuildDirectory $buildDirectory -PassThru
+    $karambitArgs = @{ GameDir = $GameDir; PassThru = $true }
+    if ($UnityPath) { $karambitArgs.UnityPath = $UnityPath }
+    $karambitBuild = & (Join-Path $PSScriptRoot 'Build-Karambit.ps1') @karambitArgs
+    if (-not $karambitBuild -or $karambitBuild -is [array]) { throw 'Karambit build did not return exactly one output directory.' }
+    $releaseDirectory = & (Join-Path $PSScriptRoot 'Prepare-Release.ps1') -BuildDirectory $buildDirectory -KarambitBuildDirectory $karambitBuild -PassThru
     if (-not $releaseDirectory -or $releaseDirectory -is [array]) { throw 'Packaging did not return exactly one output directory.' }
     if ((Invoke-ReleaseGit -Arguments @('status', '--porcelain')) -or (Invoke-ReleaseGit -Arguments @('rev-parse', 'HEAD')) -ne $commit) {
         throw 'Public source changed while building. Commit the changes and rebuild before publishing.'
@@ -59,8 +64,10 @@ try {
 
     $remoteCommit = Invoke-ReleaseGh -Arguments @('api', "repos/$repoName/commits/$branch", '--jq', '.sha')
     if ($remoteCommit -ne $commit) { throw 'The GitHub default branch changed while building. Nothing uploaded.' }
-    $assets = @(Get-ChildItem -LiteralPath $releaseDirectory -File | Sort-Object Name)
-    if ($assets.Count -ne 7) { throw 'Expected exactly seven verified release files.' }
+    $manualName = "baanish-armory_$($modInfo.version)-manual-install.zip"
+    $assets = @((Get-Item -LiteralPath (Join-Path $releaseDirectory $manualName))) +
+        @(Get-ChildItem -LiteralPath $releaseDirectory -File | Where-Object Name -NE $manualName | Sort-Object Name)
+    if ($assets.Count -ne 10) { throw 'Expected exactly ten verified release files.' }
     # Creating the ref fails atomically if another release claimed this version during the build.
     $createdTag = Invoke-ReleaseGh -Arguments @('api', '--method', 'POST', "repos/$repoName/git/refs",
         '-f', "ref=refs/tags/$tag", '-f', "sha=$commit") | ConvertFrom-Json

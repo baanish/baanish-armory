@@ -1,0 +1,40 @@
+// launch --input uses this same mission for manual flight; run checks registration, carriage and the start pose.
+{
+  "mission": "karambit.mission.json",
+  "mods": "clean",
+  "plugins": [
+    "installed:com.nikkorap.blueprinter",
+    "../../.local/karambit-build/runtime",
+    "content:../../.local/karambit-build/baanish-karambit-prototype_0.1.0.nobp host=com.nikkorap.blueprinter keys=baanish_karambit,baanish_karambit_6_internal,baanish_karambit_4_external"
+  ],
+  "timeout": 45,
+  "steps": [
+    { "require": { "path": "own.alive", "eq": true }, "label": "the Ifrit spawned alive" },
+    { "require": { "path": "own.alt_msl_m", "near": 609.6, "tol": 60 }, "label": "the Ifrit starts at 2,000 ft" },
+    { "fly": { "mode": "hold", "alt_msl_m": 609.6, "hdg_deg": 0, "throttle": 0.7 } },
+    { "act": { "station": 2 } },
+    { "require": { "all": [
+      { "path": "own.station.name", "eq": "AAM-29 Scythe" },
+      { "path": "own.station.ammo", "eq": 4 }
+    ] }, "label": "two mirrored stock Scythe racks carry four comparison rounds" },
+    { "act": { "station": 1 } },
+    { "require": { "all": [
+      { "path": "own.station.name", "eq": "SAAM-18 Karambit" },
+      { "path": "own.station.ammo", "eq": 20 }
+    ] }, "label": "the Karambit station carries 20 rounds" },
+    { "require": { "all": [
+      { "path": "contacts.Karambit_Medusa.type", "eq": "EW1" },
+      { "path": "contacts.Karambit_Medusa.side", "eq": "friendly" },
+      { "path": "contacts.Karambit_Medusa.pos.y", "near": 750, "tol": 60 }
+    ] }, "label": "the friendly Medusa starts at 750 m" },
+    { "check": { "path": "own.alive", "eq": true }, "for": 5, "label": "the prototype survives five seconds of level flight" },
+    { "check": { "all": [
+      { "path": "truth.units.Karambit_Medusa.alive", "eq": true },
+      { "path": "truth.ai.Karambit_Medusa.state", "eq": "No Target" },
+      { "path": "truth.units.Karambit_Medusa.pos.y", "between": [300, 2500] }
+    ] }, "for": 20, "label": "the Medusa keeps patrolling beyond the stock AI landing timeout" },
+    { "wait": { "path": "contacts.Karambit_Inbound_01.live", "eq": true }, "timeout": 5,
+      "label": "the incoming track refreshes after the initial cue expires" },
+    { "screenshot": { "name": "karambit-start" } }
+  ]
+}

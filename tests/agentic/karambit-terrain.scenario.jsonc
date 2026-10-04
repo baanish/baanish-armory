@@ -1,0 +1,33 @@
+{
+  "mission": "karambit-terrain.mission.json",
+  "checks": ["karambit_intercept.cs"],
+  "mods": "clean",
+  "plugins": [
+    "installed:com.nikkorap.blueprinter",
+    "../../.local/karambit-build/runtime",
+    "../../.local/karambit-build/salvo-control",
+    "content:../../.local/karambit-build/baanish-karambit-prototype_0.1.0.nobp host=com.nikkorap.blueprinter keys=baanish_karambit,baanish_karambit_6_internal,baanish_karambit_4_external"
+  ],
+  "timeout": 100,
+  "steps": [
+    { "require": { "path": "own.type", "eq": "Multirole1" }, "label": "the player is in the Ifrit" },
+    { "fly": { "mode": "hold", "alt_msl_m": 609.6, "hdg_deg": 0, "throttle": 0.7 } },
+    { "act": { "station": 1 } },
+    { "wait": { "path": "mods.dev.baanish.karambit.terrain-test.ready", "eq": true }, "timeout": 10,
+      "label": "the isolated ninety-metre terrain collider ridge exists before launch" },
+    { "wait": { "path": "contacts.Karambit_Inbound_01.live", "eq": true }, "timeout": 35 },
+    { "act": { "target": "Karambit_Inbound_01" } },
+    { "wait": { "path": "contacts.Karambit_Inbound_01.range_m", "lt": 22224 }, "timeout": 15 },
+    { "wait": { "path": "own.station.ready", "eq": true }, "timeout": 10 },
+    { "require": { "path": "truth.missiles.count", "eq": 20 }, "label": "record the complete incoming salvo before firing" },
+    { "mark": { "label": "intercept" } },
+    { "act": { "fire": 0.2 } },
+    { "check": { "path": "mods.dev.baanish.karambit.terrain-test.crossed", "eq": true }, "within": 30,
+      "label": "the Karambit crosses the ninety-metre ridge alive instead of following its low cue into terrain" },
+    { "require": { "path": "mods.dev.baanish.karambit.terrain-test.minimum_clearance_m", "gt": 2 },
+      "label": "the real missile maintained positive physical terrain clearance across the ridge" },
+    { "record": { "path": "mods.dev.baanish.karambit.terrain-test.minimum_clearance_m" } },
+    { "check": { "custom": { "name": "LockedCruiseMissileDestroyed", "args": { "since": "intercept" } } }, "within": 30,
+      "label": "the terrain detour still ends in actual designated AShM-300 destruction" }
+  ]
+}

@@ -1,10 +1,12 @@
-# Build baanish-armory 0.2.0
+# Build baanish-armory 0.3.0
 
-This project builds the baanish-armory Blueprinter bundle and source archive, with Eyeball-XL and the AGK-4 Lance. You need a local game installation and an asset export, since the repository doesn't include extracted game assets.
+This project builds the Armory and Karambit Blueprinter bundles, Karambit's guidance DLL and source archives. Together they provide Eyeball-XL, AGK-4 Lance and SAAM-18 Karambit. You need a local game installation and an asset export, since the repository doesn't include extracted game assets.
 
 ## Prepare the local dependencies
 
 Use Windows, PowerShell 7, Git and Unity Editor **2022.3.62f2**. You need a purchased copy of Nuclear Option **0.34.2** to obtain the game assemblies and placeholder assets. The project pins Blueprinter Editor to commit `9a4a8e509480cbcde901a577985d5e9cbc570d91` through Unity's package manifest.
+
+Karambit also requires the .NET SDK. Python 3 with Pillow is required only when authoring its assets. Install Pillow with `python -m pip install pillow`.
 
 Keep the repository and export in plain local folders. The path checks reject symlinks, junctions and OneDrive Files On-Demand locations.
 
@@ -27,6 +29,7 @@ Close this project's Unity editor. From the repository root, run:
 
 ```powershell
 ./scripts/Build-Prototype.ps1
+./scripts/Build-Karambit.ps1
 ```
 
 The script reads the required editor version from the project and looks for a matching Windows installation in the registry, the standard Unity Hub folder, then `PATH`. To select an executable explicitly, use:
@@ -35,7 +38,15 @@ The script reads the required editor version from the project and looks for a ma
 ./scripts/Build-Prototype.ps1 -UnityPath 'X:/Unity/2022.3.62f2/Editor/Unity.exe'
 ```
 
-The build writes a timestamped directory under `.local/builds` with the `.nobp` bundle, Blueprinter `.source.zip`, patch manifest, checksums and editor diagnostics.
+The Armory build writes a timestamped directory under `.local/builds` with the `.nobp` bundle, Blueprinter `.source.zip`, patch manifest, checksums and editor diagnostics. The Karambit build validates and builds the committed assets, then writes its separate bundle, Blueprinter source ZIP, runtime DLL and checksums under `.local/karambit-build`. Its internal bundle identity remains `baanish-karambit-prototype0.1.0`. The release runtime is version 0.3.0.
+
+After changing Karambit's shape, art or stats, regenerate and author its assets with:
+
+```powershell
+./scripts/Build-Karambit.ps1 -AuthorAssets
+```
+
+This runs `art/source/karambit/build_karambit.py` and Unity asset authoring before building. Review and commit the resulting asset changes before preparing a release. The default build does not reauthor assets.
 
 The baseline manifest pins the mod assets. If you change an asset, include its baseline update in the same change. Don't bypass validation to produce a release.
 
@@ -73,32 +84,36 @@ $preview = '.local/lance-preview'
    ```powershell
    & 'X:/Unity/2022.3.62f2/Editor/Unity.exe' -batchmode -quit -projectPath "$PWD/unity" -executeMethod BaanishArmory.Editor.LanceAssetBuild.Author
    ```
-5. Run `./scripts/Test-Source.ps1`. It stops at the first authored file whose hash no longer matches `config/prototype-baseline-0.2.0.json`. Update that file's `sha256`, hashing PNG files as raw bytes and every other file as UTF-8 text with LF line endings, and rerun until the check passes. Then build.
+5. Run `./scripts/Test-Source.ps1`. It stops at the first authored file whose hash no longer matches `config/prototype-baseline-0.3.0.json`. Update that file's `sha256`, hashing PNG files as raw bytes and every other file as UTF-8 text with LF line endings, and rerun until the check passes. Then build.
 
 To review the result, `render_comparison.py` renders the Lance beside the stock AGRs and `render_vortex_loadout.py` renders it on an FS-20 Vortex. Both take the same arguments as step 2.
 
 ## Prepare local release packages
 
-After a successful build, pass its output directory to:
+After both builds succeed, pass both output directories to:
 
 ```powershell
-./scripts/Prepare-Release.ps1 -BuildDirectory '.local/builds/prototype-<timestamp>'
+./scripts/Prepare-Release.ps1 -BuildDirectory '.local/builds/prototype-<timestamp>' -KarambitBuildDirectory '.local/karambit-build'
 ```
 
-The command verifies the build hashes and exported source, then creates a new directory under `.local/releases`. It contains the loose bundle, Blueprinter source ZIP, repository source ZIP, manual-install ZIP, local NOMM metadata and checksums. Git's public file list must exactly match `config/release-source-files.txt`; review changes to that list before packaging. The release manifest records a SHA-256 hash for every included source file.
+The command verifies both builds' hashes, exported source and runtime version, then creates ten files under `.local/releases`: two loose bundles, two Blueprinter source ZIPs, the guidance DLL, repository source ZIP, manual-install ZIP, local NOMM metadata, release manifest and checksums. Both build-directory arguments are required. Git's public file list must exactly match `config/release-source-files.txt`. Review changes to that list before packaging. The release manifest records a SHA-256 hash for every included source file.
+
+The manual-install ZIP has eight entries under one `baanish-armory` plugin folder, including both bundles and `Baanish.Karambit.dll`. Metadata declares a plugin with a Blueprinter 2.0.1 dependency, so the bundles and runtime stay together when the folder is disabled. NOMM catalog support remains unverified.
 
 The script can package an uncommitted working tree. Before publishing, verify that the source package matches the release commit.
 
-The script writes local packages. Use the [installation guide](INSTALL.md) to install the manual ZIP through NOMM.
+The script writes local packages. Use the [installation guide](INSTALL.md) to extract and install the manual ZIP.
 
 ## CI and releases
 
-I build releases on my own PC. Contributors need to build their releases on their own prepared machines too. GitHub Actions runs source checks on pushes and pull requests: the public file list, PowerShell syntax and the pinned asset hashes. It does not run Unity or produce a playable download.
+I build releases on my own PC. Contributors need to build their releases on their own prepared machines too. GitHub Actions checks the public file list, PowerShell syntax, pinned asset hashes, Karambit seeker policy and release-packaging fixtures on pushes and pull requests. It does not run Unity or produce a playable download.
 
 To run those checks locally:
 
 ```powershell
 ./scripts/Test-Source.ps1
+dotnet run --project tests/Karambit/Karambit.Tests.csproj -c Release
+./tests/Release/PrepareRelease.Tests.ps1
 ```
 
 Commit your changes, then build and package a release in one command:
@@ -115,7 +130,7 @@ That command uploads nothing. To build and publish a new version, install the Gi
 
 The command builds with your local Unity installation, packages the output, uploads a draft, verifies every uploaded file's SHA-256 hash, then publishes it as a prerelease. It requires a clean working tree and a local commit matching the GitHub default branch. It refuses to replace an existing version tag. A failed upload stays in draft for inspection.
 
-The current build and packaging checks pin version 0.2.0. For a new version, update the mod metadata, baseline, game reference map and matching validation checks together. Passing `-UnityPath` selects a specific editor installation. Repository visibility is never changed by these scripts.
+The current build and packaging checks pin version 0.3.0. For a new version, update the release metadata, runtime version, baseline, game reference map and matching validation checks together. Karambit's internal bundle identity can remain stable. Passing `-UnityPath` selects a specific editor installation. Repository visibility is never changed by these scripts.
 
 ## Verify in game
 
@@ -123,10 +138,12 @@ With Blueprinter and the mod enabled, select **EW-25 Medusa > Outer Wing Pylons 
 
 For the Lance, select **FS-20 Vortex > Inner wing pylons > AGK-4 Lance x4**. Check four rounds per pod at $150,000 each, the loadout icon, the AGK-4 stencil and the rocket noses in the tube mouths. Check that every listed hardpoint offers the pod and that the pod clears the VT-7 Vagrant's landing gear on the centre pylon. Fire at a lased tank and a lased SPAAG from a helicopter and from a supersonic jet, and check that the laser windows show the same purple as the Eyeball-XL's.
 
-The XL's 12 km search setting isn't a measured detection radius, since target visibility and terrain affect spotting. I haven't tested multiplayer, and the balance still needs play.
+For Karambit, check the Revoker's eight internal and twelve external rounds on two six-round wing racks, with no Karambit wingtip option. Check maximum capacities of 20 on Vortex and 28 on Ifrit. Select incoming missile tracks and fire a native burst. Inspect designated-track priority, fallback targeting, low-cruise terrain avoidance and air interception for aircraft, SAMs, lofting missiles and ballistic missiles. Keep both bundles and the guidance DLL enabled together.
+
+The current 900 m/s Karambit balance, with 62.97749 kg launch mass, passed manual single-player playtesting. Earlier automated flight and full-salvo checks used a previous motor balance and do not validate the current balance or Revoker six-round rack. The XL's 12 km search setting isn't a measured detection radius, and Karambit's 12 nautical mile envelope isn't a guaranteed interception range. Multiplayer remains untested.
 
 ## Validation scope
 
-The build checks asset hashes and imported game references. For both weapons it checks display names, costs, hardpoint registrations and encyclopedia entries. For the Lance it also checks the motor, penetrator, seeker and fire armor, that the flame and trail last the whole burn, that the motor has a one-shot launch sound and one loop, and the launch rail, pod collider and LOD, materials and icon. Packaging checks the exported source and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
+The build checks asset hashes and imported game references. For Eyeball-XL and Lance it checks display names, costs, hardpoint registrations and encyclopedia entries. For the Lance it also checks the motor, penetrator, seeker and fire armor, that the flame and trail last the whole burn, that the motor has a one-shot launch sound and one loop, and the launch rail, pod collider and LOD, materials and icon. Karambit's asset checks pin its 300 and 600 m/s stage allocations, 900 m/s total, dry and loaded masses, model budget and rack geometry. Packaging checks both exported sources and ZIP contents against the inputs and rejects files outside `config/release-source-files.txt`.
 
 These checks catch missing dependencies and unintended asset changes, but they don't replace an in-game test. Bundle bytes and ZIP timestamps may differ between otherwise identical builds.
