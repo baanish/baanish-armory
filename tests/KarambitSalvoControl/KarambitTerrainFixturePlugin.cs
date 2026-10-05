@@ -30,6 +30,8 @@ public sealed class KarambitTerrainFixturePlugin : BaseUnityPlugin
 
     private void FixedUpdate()
     {
+        MissionManager.onMissionLoad -= ResetFixture;
+        MissionManager.onMissionLoad += ResetFixture;
         string? missionName = MissionManager.CurrentMission?.Name;
         bool narrow = missionName == "_agentic karambit-terrain-narrow";
         if ((!narrow && missionName != "_agentic karambit-terrain") || !MissionManager.IsRunning)
