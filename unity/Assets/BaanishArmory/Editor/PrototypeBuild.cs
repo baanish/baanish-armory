@@ -67,10 +67,10 @@ namespace BaanishArmory.Editor
                 throw new InvalidOperationException("Finish play mode or compilation before building.");
 
             var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText(ModFolder + "/modinfo.json"));
-            if (info.displayName != ModName || info.version != "0.2.0" || !ModBuilder.ValidateVersion(info.version, out var version))
-                throw new InvalidDataException("Expected the authored baanish-armory 0.2.0 source.");
+            if (info.displayName != ModName || info.version != "0.3.0" || !ModBuilder.ValidateVersion(info.version, out var version))
+                throw new InvalidDataException("Expected the authored baanish-armory 0.3.0 source.");
             var workspace = Directory.GetParent(Application.dataPath).Parent.FullName;
-            var baseline = JsonUtility.FromJson<SourceBaseline>(File.ReadAllText(Path.Combine(workspace, "config", "prototype-baseline-0.2.0.json")));
+            var baseline = JsonUtility.FromJson<SourceBaseline>(File.ReadAllText(Path.Combine(workspace, "config", "prototype-baseline-0.3.0.json")));
             ValidateSourceBaseline(workspace, baseline);
             if (Application.unityVersion != baseline.unityVersion)
                 throw new InvalidDataException("Use Unity " + baseline.unityVersion + " for this source baseline.");
@@ -384,10 +384,10 @@ namespace BaanishArmory.Editor
 
         private static void ValidateSourceBaseline(string workspace, SourceBaseline baseline)
         {
-            if (baseline == null || baseline.schemaVersion != 1 || baseline.modVersion != "0.2.0" ||
+            if (baseline == null || baseline.schemaVersion != 1 || baseline.modVersion != "0.3.0" ||
                 baseline.unityVersion != "2022.3.62f2" || baseline.hashPolicy != "png-bytes;other-files-utf8-lf-no-bom" ||
                 baseline.files == null || baseline.files.Length != 49)
-                throw new InvalidDataException("Expected the checked-in 0.2.0 source baseline with 49 files.");
+                throw new InvalidDataException("Expected the checked-in 0.3.0 source baseline with 49 files.");
             var relativeMod = "unity/" + ModFolder;
             var modPath = Path.GetFullPath(Path.Combine(workspace, relativeMod));
             var expected = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

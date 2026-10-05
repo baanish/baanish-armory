@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "modVersion": "0.2.0",
+  "modVersion": "0.3.0",
   "gameVersion": "0.34.2",
   "assets": [
     {
@@ -173,6 +173,168 @@
       "path": "Sprite/incomingMissile_PLACEHOLDER.asset",
       "guid": "8795293119d120f4b9f339517324babf",
       "objects": [{ "fileId": 21300000, "type": "UnityEngine.Sprite, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "AudioClip/NearMissileAirburst.ogg",
+      "path": "AudioClip/NearMissileAirburst_PLACEHOLDER.ogg",
+      "guid": "dd6e189b13e02d24a8caeaa6f13574ce",
+      "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
+    },
+    {
+      "exportPath": "AudioClip/rocket_med_loop.ogg",
+      "path": "AudioClip/rocket_med_loop_PLACEHOLDER.ogg",
+      "guid": "cb11f2423efd84c4fabf3877c890863b",
+      "objects": [{ "fileId": 8300000, "type": "UnityEngine.AudioClip, UnityEngine.AudioModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2.prefab",
+      "path": "GameObject/AAM2_PLACEHOLDER.prefab",
+      "guid": "07e221c2d428a444dae473d9e0d8b952",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_double.prefab",
+      "path": "GameObject/AAM2_double_PLACEHOLDER.prefab",
+      "guid": "f5a88e8d11b1f9a44a4ea63f58807ac6",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_double_internal.prefab",
+      "path": "GameObject/AAM2_double_internal_PLACEHOLDER.prefab",
+      "guid": "51bf2f9b8c06c854c8f3a44d694aa353",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_single.prefab",
+      "path": "GameObject/AAM2_single_PLACEHOLDER.prefab",
+      "guid": "595c0885baad2374e98618ad419c2180",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_single_internal.prefab",
+      "path": "GameObject/AAM2_single_internal_PLACEHOLDER.prefab",
+      "guid": "cb77b673a1ca3f043bb5fa89a234e001",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_triple.prefab",
+      "path": "GameObject/AAM2_triple_PLACEHOLDER.prefab",
+      "guid": "a4106bb59fc73b84ebf2c2d906f73a5a",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/AAM2_triple_internal.prefab",
+      "path": "GameObject/AAM2_triple_internal_PLACEHOLDER.prefab",
+      "guid": "269fa54b3c91e7e42a9220e48a2b4d8b",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/Fighter1.prefab",
+      "path": "GameObject/Fighter1_PLACEHOLDER.prefab",
+      "guid": "f74588ab86d1a1f4caae2657ea765ca1",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/Multirole1.prefab",
+      "path": "GameObject/Multirole1_PLACEHOLDER.prefab",
+      "guid": "4bf3560d09303ef4b8603edf5a1a7603",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "GameObject/SmallFighter1.prefab",
+      "path": "GameObject/SmallFighter1_PLACEHOLDER.prefab",
+      "guid": "d1054c5771c73e642b2e61aa62cabe91",
+      "objects": [{ "fileId": 1709254077376921, "type": "UnityEngine.GameObject, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Material/Weapons4.mat",
+      "path": "Material/Weapons4_PLACEHOLDER.mat",
+      "guid": "73967f6731e6f79469ae77c11e180d8f",
+      "objects": [{ "fileId": 2100000, "type": "UnityEngine.Material, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Material/rocketExhaust1.mat",
+      "path": "Material/rocketExhaust1_PLACEHOLDER.mat",
+      "guid": "3dccc05127bc06f498b1eb5f97e0293e",
+      "objects": [{ "fileId": 2100000, "type": "UnityEngine.Material, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Mesh/AAM2.asset",
+      "path": "Mesh/AAM2_PLACEHOLDER.asset",
+      "guid": "a9820a1b43003e14e95c882648edf0a1",
+      "objects": [{ "fileId": 4300000, "type": "UnityEngine.Mesh, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Mesh/pylon_double1.asset",
+      "path": "Mesh/pylon_double1_PLACEHOLDER.asset",
+      "guid": "d07084a1605090d429048f4a7fcc03f1",
+      "objects": [{ "fileId": 4300000, "type": "UnityEngine.Mesh, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2.asset",
+      "path": "MonoBehaviour/AAM2_PLACEHOLDER.asset",
+      "guid": "fbd824e6241f56a48a4f6072bf7adb0e",
+      "objects": [{ "fileId": 11400000, "type": "MissileDefinition, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_double.asset",
+      "path": "MonoBehaviour/AAM2_double_PLACEHOLDER.asset",
+      "guid": "69b5e66560c97414da73449d867e708a",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_double_internal.asset",
+      "path": "MonoBehaviour/AAM2_double_internal_PLACEHOLDER.asset",
+      "guid": "b30729f0400db864f8e210917c7ad6aa",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_info.asset",
+      "path": "MonoBehaviour/AAM2_info_PLACEHOLDER.asset",
+      "guid": "0e5fa810506d5a847970901e2c46da6c",
+      "objects": [{ "fileId": 11400000, "type": "WeaponInfo, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_single.asset",
+      "path": "MonoBehaviour/AAM2_single_PLACEHOLDER.asset",
+      "guid": "9d8b45c29314cbd408a1ffe0087c4793",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_single_internal.asset",
+      "path": "MonoBehaviour/AAM2_single_internal_PLACEHOLDER.asset",
+      "guid": "2f8c40632d67240488cbd08b14747b79",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_triple.asset",
+      "path": "MonoBehaviour/AAM2_triple_PLACEHOLDER.asset",
+      "guid": "91655d2e63a66b746ac2c32f19686040",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "MonoBehaviour/AAM2_triple_internal.asset",
+      "path": "MonoBehaviour/AAM2_triple_internal_PLACEHOLDER.asset",
+      "guid": "6758cd4127834da42ac5347bb9b6a6f2",
+      "objects": [{ "fileId": 11400000, "type": "WeaponMount, Assembly-CSharp" }]
+    },
+    {
+      "exportPath": "Sprite/weaponIcon_AAM2.asset",
+      "path": "Sprite/weaponIcon_AAM2_PLACEHOLDER.asset",
+      "guid": "2ad3aee3e32ff3242b5aa623cb7476b4",
+      "objects": [{ "fileId": 21300000, "type": "UnityEngine.Sprite, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Texture2D/weapons4_ao.png",
+      "path": "Texture2D/weapons4_ao_PLACEHOLDER.png",
+      "guid": "f61db50e9fe44b446964c0705bd59cb4",
+      "objects": [{ "fileId": 2800000, "type": "UnityEngine.Texture2D, UnityEngine.CoreModule" }]
+    },
+    {
+      "exportPath": "Texture2D/weapons4_b.png",
+      "path": "Texture2D/weapons4_b_PLACEHOLDER.png",
+      "guid": "a3c0096cd4f33724a8beff9509062842",
+      "objects": [{ "fileId": 2800000, "type": "UnityEngine.Texture2D, UnityEngine.CoreModule" }]
     }
   ]
 }

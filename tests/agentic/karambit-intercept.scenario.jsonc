@@ -1,0 +1,54 @@
+{
+  "mission": "karambit.mission.json",
+  "checks": ["karambit_intercept.cs"],
+  "mods": "clean",
+  "plugins": [
+    "installed:com.nikkorap.blueprinter",
+    "../../.local/karambit-build/runtime",
+    "content:../../.local/karambit-build/baanish-karambit-prototype_0.1.0.nobp host=com.nikkorap.blueprinter keys=baanish_karambit,baanish_karambit_6_internal,baanish_karambit_4_external"
+  ],
+  "timeout": 100,
+  "steps": [
+    { "require": { "path": "own.type", "eq": "Multirole1" }, "label": "the player is in the Ifrit" },
+    { "fly": { "mode": "hold", "alt_msl_m": 609.6, "hdg_deg": 0, "throttle": 0.7 } },
+    { "act": { "station": 1 } },
+    { "require": { "all": [
+      { "path": "own.station.name", "eq": "SAAM-18 Karambit" },
+      { "path": "own.station.ammo", "eq": 20 }
+    ] }, "label": "the Ifrit carries 20 Karambits" },
+    { "wait": { "path": "mods.dev.baanish.karambit.inbound_warmstarts", "eq": 20 }, "timeout": 10,
+      "label": "all 20 cruise missiles started in flight" },
+    { "record": { "path": "mods.dev.baanish.karambit.inbound_cruise_speed_mps" }, "label": "stock AShM-300 calculated cruise speed, m/s" },
+    { "wait": { "path": "contacts.Karambit_Inbound_01.live", "eq": true }, "timeout": 35,
+      "label": "the Ifrit tracks the incoming missile" },
+    { "act": { "target": "Karambit_Inbound_01" } },
+    { "analyze": { "target": "Karambit_Inbound_01" } },
+    { "wait": { "path": "contacts.Karambit_Inbound_01.range_m", "lt": 22224 }, "timeout": 15,
+      "label": "the incoming missile enters the 12 nm launch envelope" },
+    { "wait": { "path": "own.station.ready", "eq": true }, "timeout": 10, "label": "the weapon can fire" },
+    { "require": { "path": "truth.missiles.count", "eq": 20 }, "label": "all 20 incoming missiles remain alive before firing" },
+    { "mark": { "label": "intercept" } },
+    { "act": { "fire": 0.2 } },
+    { "check": { "event": "own_launch", "type": "baanish_karambit", "since": "intercept" }, "within": 2,
+      "label": "one Karambit leaves the internal mount" },
+    { "check": { "path": "own.alive", "eq": true }, "for": 6,
+      "label": "the initial one-time cue has time to expire" },
+    { "require": { "path": "contacts.Karambit_Inbound_01.live", "eq": true },
+      "label": "friendly radar support maintains the incoming track after the initial cue" },
+    { "check": { "custom": { "name": "LowCruiseBelowTarget", "args": { "since": "intercept" } } }, "within": 10,
+      "label": "the five-degree launch settles near 10 ft below the sea-skimmer before terminal pursuit" },
+    { "check": { "custom": { "name": "LockedCruiseMissileDestroyed", "args": { "since": "intercept" } } }, "within": 45,
+      "label": "the launched Karambit destroys its designated AShM-300 within 0.5 s of its end" },
+    { "check": { "custom": { "name": "CruiseMachObserved", "args": { "since": "intercept" } } }, "within": 1,
+      "label": "the complete sea-skimming interception peaks near Mach 2.5" },
+    { "check": { "path": "truth.missiles.count", "lt": 20 }, "within": 3,
+      "label": "the incoming salvo has fewer than 20 surviving missiles" },
+    { "require": { "path": "own.station.ammo", "eq": 19 }, "label": "exactly one round was fired" },
+    { "check": { "all": [
+      { "path": "truth.units.Karambit_Medusa.alive", "eq": true },
+      { "path": "truth.units.Karambit_Medusa.pos.y", "gt": 300 },
+      { "path": "truth.units.Karambit_Medusa.pos.y", "lt": 2000 }
+    ] }, "for": 18, "label": "the Medusa stays airborne after the normal idle landing timer" },
+    { "screenshot": { "name": "karambit-intercept" } }
+  ]
+}

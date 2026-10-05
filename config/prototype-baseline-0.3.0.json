@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "modVersion": "0.2.0",
+  "modVersion": "0.3.0",
   "unityVersion": "2022.3.62f2",
   "hashPolicy": "png-bytes;other-files-utf8-lf-no-bom",
   "files": [
@@ -178,7 +178,7 @@
     },
     {
       "path": "unity/Assets/Blueprinter/Mods/baanish-armory/modinfo.json",
-      "sha256": "b355e21ca9f71113c53c2afdd1c930683ffc603b7dd4e3d567137b2b77cc1f74"
+      "sha256": "a106e1ddae21b8609db5eb95cf4355cfdc0ecbb18a8c170e09423e97beb79f28"
     },
     {
       "path": "unity/Assets/Blueprinter/Mods/baanish-armory/modinfo.json.meta",
