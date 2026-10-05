@@ -371,13 +371,12 @@ namespace BaanishArmory.Editor
             RenameDuplicateChildren(root.transform);
             foreach (var lod in root.GetComponentsInChildren<LODGroup>(true))
             {
-                if (!mount.internalMount)
-                {
-                    var renderers = root.GetComponentsInChildren<Renderer>(true);
-                    var levels = lod.GetLODs();
-                    for (var i = 0; i < levels.Length; i++) levels[i].renderers = renderers;
-                    lod.SetLODs(levels);
-                }
+                var renderers = mount.internalMount
+                    ? lod.GetComponentsInChildren<Renderer>(true)
+                    : root.GetComponentsInChildren<Renderer>(true);
+                var levels = lod.GetLODs();
+                for (var i = 0; i < levels.Length; i++) levels[i].renderers = renderers;
+                lod.SetLODs(levels);
                 lod.RecalculateBounds();
             }
         }
@@ -642,6 +641,21 @@ namespace BaanishArmory.Editor
                 var seats = Components(prefab).Where(c => c.GetType().FullName == "MountedMissile").ToArray();
                 if (seats.Length != mount.rounds || seats.Any(seat => new SerializedObject(seat).FindProperty("info").objectReferenceValue != Load<Object>(Prefix + "_info.asset")))
                     throw new InvalidDataException("Physical launcher count or info mismatch: " + mount.key);
+                if (mount.internalMount)
+                {
+                    var lodGroups = prefab.GetComponentsInChildren<LODGroup>(true);
+                    foreach (var lod in lodGroups)
+                    {
+                        var expected = lod.GetComponentsInChildren<Renderer>(true);
+                        var levels = lod.GetLODs();
+                        if (expected.Length == 0 || levels.Length == 0 || levels.Any(level => level.renderers == null ||
+                            level.renderers.Length != expected.Length || expected.Any(renderer => !level.renderers.Contains(renderer))))
+                            throw new InvalidDataException("Internal LOD levels must contain exactly their descendant round renderers: " + mount.key + "/" + lod.name);
+                    }
+                    var covered = new HashSet<Renderer>(lodGroups.SelectMany(lod => lod.GetLODs()).SelectMany(level => level.renderers));
+                    if (!covered.SetEquals(seats.Select(seat => (Renderer)seat.GetComponent<MeshRenderer>())))
+                        throw new InvalidDataException("Internal LOD groups must cover every mounted round: " + mount.key);
+                }
                 var stockSeats = Components(Load<GameObject>(Stock("GameObject/" + mount.stock + "_PLACEHOLDER.prefab")))
                     .Where(c => c.GetType().FullName == "MountedMissile").ToArray();
                 if (stockSeats.Length * 2 != mount.rounds)

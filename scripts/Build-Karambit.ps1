@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
     [string]$GameDir = 'D:/SteamLibrary/steamapps/common/Nuclear Option',
-    [string]$UnityPath = 'C:/Program Files/Unity/Hub/Editor/2022.3.62f2/Editor/Unity.exe',
+    [string]$UnityPath,
     [string]$PythonPath = 'python',
     [switch]$AuthorAssets,
     [switch]$RuntimeOnly,
@@ -11,6 +11,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+$GameDir = [IO.Path]::GetFullPath($GameDir, $PWD.Path)
 $workspace = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $workspace 'unity'
 $output = Join-Path $workspace '.local/karambit-build'
@@ -18,9 +19,24 @@ $runtime = Join-Path $output 'runtime'
 if (-not (Test-Path -LiteralPath (Join-Path $GameDir 'NuclearOption_Data/Managed/Assembly-CSharp.dll'))) {
     throw 'GameDir must contain the installed Nuclear Option game assemblies.'
 }
-if (-not $RuntimeOnly -and (-not (Test-Path -LiteralPath $UnityPath) -or
-    (((Get-Item -LiteralPath $UnityPath).VersionInfo.ProductVersion -split '_')[0] -ne '2022.3.62f2'))) {
-    throw 'The prototype requires Unity 2022.3.62f2.'
+if (-not $RuntimeOnly) {
+    $requiredVersion = '2022.3.62f2'
+    $candidates = if ($UnityPath) {
+        [IO.Path]::GetFullPath($UnityPath, $PWD.Path)
+    } else {
+        foreach ($registryRoot in @('HKLM:/SOFTWARE', 'HKLM:/SOFTWARE/WOW6432Node', 'HKCU:/SOFTWARE')) {
+            $key = "$registryRoot/Microsoft/Windows/CurrentVersion/Uninstall/Unity $requiredVersion"
+            $iconPath = Get-ItemPropertyValue -LiteralPath $key -Name DisplayIcon -ErrorAction SilentlyContinue
+            if ($iconPath) { ($iconPath -replace ',\s*-?\d+\s*$', '').Trim().Trim('"') }
+        }
+        if ($env:ProgramFiles) { Join-Path $env:ProgramFiles "Unity/Hub/Editor/$requiredVersion/Editor/Unity.exe" }
+        Get-Command Unity.exe -CommandType Application -All -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+    }
+    $UnityPath = $candidates | Where-Object {
+        (Test-Path -LiteralPath $_ -PathType Leaf) -and
+        (((Get-Item -LiteralPath $_).VersionInfo.ProductVersion -split '_')[0] -eq $requiredVersion)
+    } | Select-Object -First 1
+    if (-not $UnityPath) { throw "Could not find Unity $requiredVersion. Pass its executable with -UnityPath." }
 }
 $lock = Join-Path $project 'Temp/UnityLockfile'
 if (-not $RuntimeOnly -and (Test-Path -LiteralPath $lock)) {

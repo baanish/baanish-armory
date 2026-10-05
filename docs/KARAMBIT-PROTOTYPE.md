@@ -136,7 +136,7 @@ The scenarios under `tests/agentic` load only the framework, Blueprinter and thi
 & 'E:/Development/NO-Agentic-Framework/.cache/tools/no-agentic.exe' run tests/agentic/karambit-intercept.scenario.jsonc --game-dir 'D:/SteamLibrary/steamapps/common/Nuclear Option' --digest
 ```
 
-The interception check correlates the fired Karambit's ID, its designated and locked target IDs, and that AShM-300's disappearance from complete truth snapshots within 0.5 seconds of the interceptor's end. The framework's generic `hit` classification alone does not prove destruction. The scenario also checks continued tracking after the one-time cue expires and that the Medusa stays airborne past its idle landing timer.
+The interception check correlates the fired Karambit's ID, its designated and locked target IDs, and that AShM-300's disappearance from complete truth snapshots within 0.5 seconds of the interceptor's end. It also requires compatible final separation. The evidence allowance is 20 m plus 1,500 m/s of combined closure during the last sample's age, up to 0.5 seconds. This conservative test allowance can reject sparse telemetry; it is not a weapon damage radius. The framework's generic `hit` classification alone does not prove destruction. The scenario also checks continued tracking after the one-time cue expires and that the Medusa stays airborne past its idle landing timer.
 
 On Nuclear Option 0.34.2, the rebalanced Mach 2.5 missile's single-shot scenario destroyed its designated AShM-300 after launch just inside 12 nm. It measured a sustained 3.11–3.78 m cruise altitude below the target, with the 3.048 m setpoint and five-degree launch. Peak sampled speed was Mach 2.51. Focused live checks also confirmed radar-guided and infrared SAM interception, low-SAM air guidance, and a terminal Piledriver interception from a 30-degree nose-up aircraft with a 25-degree world launch angle. Low and high aircraft retained designated radar locks and the air profile. Run evidence stays local under `.agentic/runs`. These checks do not establish cost per kill, aircraft balance or multiplayer compatibility.
 
@@ -147,11 +147,11 @@ The full-salvo test selects all twenty incoming tracks through the game's HUD, t
 & 'E:/Development/NO-Agentic-Framework/.cache/tools/no-agentic.exe' run tests/agentic/karambit-salvo.scenario.jsonc --game-dir 'D:/SteamLibrary/steamapps/common/Nuclear Option' --digest
 ```
 
-The result counts the original incoming missile IDs in a complete final truth snapshot, with all twenty interceptor end events accounted for. It measures before the patrol boat's defenses can affect the salvo. The selector is loaded only into this automated test profile.
+The result counts the original incoming missile IDs in a complete final truth snapshot, with all twenty interceptor end events accounted for. Each disappearance window must contain a compatible interceptor end after that target's last sighting. Targets observed after every interceptor has ended cannot pass. It measures before the patrol boat's defenses can affect the salvo. The selector is loaded only into this automated test profile.
 
 With the rebalanced Mach 2.5 motor and upward radar field, the full-salvo scenario passed: twenty distinct selected tracks received twenty Karambits, all twenty incoming missiles were destroyed, and ammunition reached zero. Every launch measured five degrees nose-down. The conservative missile-to-boat distance bound stayed above 19.8 km, excluding the boat's defenses from the result. The burst also released every round from both loaded external four-round racks.
 
-The result checker also has eighteen fixtures covering surviving missiles, duplicate launch IDs, missing end events, capped truth lists, the boat-distance boundary and every round's five-degree launch attitude:
+The result checker also has twenty-five fixtures covering surviving missiles, duplicate launch IDs, missing end events, capped truth lists, the boat-distance boundary, every round's five-degree launch attitude, post-end target survival and incompatible final separation:
 
 ```powershell
 dotnet run --project tests/KarambitSalvoChecks/KarambitSalvoChecks.csproj -c Release -p:FrameworkDir=E:/Development/NO-Agentic-Framework

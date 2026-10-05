@@ -85,4 +85,39 @@ trace = Baseline(); trace[22] = LaunchAttitudes(yaw: 5);
 Check("hardpoint roll turning pitch into yaw fails", trace, false, "five-degree nose-down launches 0");
 trace = Baseline(); trace[22] = LaunchAttitudes(count: 19);
 Check("every launch needs pitch telemetry", trace, false, "five-degree nose-down launches 19");
+trace = Baseline();
+for (int i = 0; i < trace.Count; i++)
+    if (trace[i].Kind == RecordKinds.Event && trace[i].Text("name") == "missile_end")
+        trace[i] = Event(12, "missile_end", (int)(double)trace[i].Fields["missile_id"]);
+trace = trace.OrderBy(r => r.T).ToList();
+Check("targets observed after every interceptor ended cannot pass", trace, false, "no compatible Karambit end after its last sighting");
+
+List<TraceRecord> Intercept(double range = 207.5, double sampleTime = 9.875, bool includeRange = true)
+{
+    var telemetry = new Dictionary<string, object> { ["target_id"] = 1, ["designated_id"] = 1 };
+    if (includeRange) telemetry["range_m"] = range;
+    return new List<TraceRecord>
+    {
+        Event(5, "mark"), Event(5.5, "own_launch"),
+        Parse(new { k = "s", t = sampleTime, mods = new Dictionary<string, object>
+        { ["dev.baanish.karambit"] = new { missiles = new Dictionary<string, object> { ["100"] = telemetry } } } }),
+        Truth(9.95, 1), Event(10, "missile_end"), Truth(10.2, 0), Sample(10.3)
+    };
+}
+void CheckIntercept(string name, List<TraceRecord> records, bool expected)
+{
+    Reading reading = KarambitIntercept.LockedCruiseMissileDestroyed(records[^1], new ConditionScope(records, 0), argsDoc.RootElement);
+    if (reading.Ok != expected)
+    {
+        Console.Error.WriteLine(name + ": " + reading.Detail);
+        Environment.Exit(1);
+    }
+    tests++;
+}
+CheckIntercept("compatible separation at the exact 207.5 m closure limit accepts", Intercept(), true);
+CheckIntercept("207.6 m exceeds the 0.125-second closure limit", Intercept(207.6), false);
+CheckIntercept("distant self-destruction cannot borrow target disappearance", Intercept(8000), false);
+CheckIntercept("missing final separation cannot prove interception", Intercept(includeRange: false), false);
+CheckIntercept("negative final separation refuses", Intercept(-1), false);
+CheckIntercept("stale final lock telemetry refuses", Intercept(10, 9.49), false);
 Console.WriteLine("PASS: " + tests + " full-salvo identity and boat-defense characterization fixtures.");

@@ -77,7 +77,7 @@ $receipt = [ordered]@{ name = $name; template = [IO.Path]::GetFullPath($Template
     missionSha256 = Get-BytesHash ($encoding.GetBytes($missionJson)); metaSha256 = Get-BytesHash ($encoding.GetBytes($metaJson)) }
 $files = [ordered]@{ (Join-Path $output ($name + '.json')) = $missionJson; (Join-Path $output 'meta.json') = $metaJson
     $receiptPath = (($receipt | ConvertTo-Json -Depth 10).Replace("`r`n", "`n") + "`n") }
-$previousReceipt = $receipt | ConvertTo-Json -Depth 10 | ConvertFrom-Json -AsHashtable
+$previousReceipt = $receipt | ConvertTo-Json -Depth 10 | ConvertFrom-Json
 $previousReceipt.missionSha256 = $previousMissionHash
 $previousFiles = @{
     (Join-Path $output ($name + '.json')) = $previousMissionHash

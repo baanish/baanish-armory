@@ -24,6 +24,7 @@ function Invoke-ReleaseGh([string[]]$Arguments) {
     $result
 }
 
+$GameDir = [IO.Path]::GetFullPath($GameDir, $PWD.Path)
 Push-Location $workspacePath
 try {
     if (Invoke-ReleaseGit -Arguments @('status', '--porcelain')) { throw 'Commit or remove public working-tree changes before preparing a release.' }

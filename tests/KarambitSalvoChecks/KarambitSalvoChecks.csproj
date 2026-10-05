@@ -10,5 +10,6 @@
   <ItemGroup>
     <Reference Include="NoAgenticFramework.Runner" HintPath="$(FrameworkDir)/src/NoAgenticFramework.Runner/bin/Release/net8.0/NoAgenticFramework.Runner.dll" />
     <Compile Include="../agentic/karambit_salvo.cs" Link="karambit_salvo.cs" />
+    <Compile Include="../agentic/karambit_intercept.cs" Link="karambit_intercept.cs" />
   </ItemGroup>
 </Project>

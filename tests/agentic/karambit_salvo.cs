@@ -79,7 +79,10 @@ public static class KarambitSalvo
         }
         string ammo = sample.Fields.TryGetValue("own.station.ammo", out object rounds) && rounds is double number
             ? Format.Number(number) : "unknown";
-        bool defenseProof = OutsideBoatDefense(records, initial.T, final, initialIds, out string defenseDetail);
+        var endTimes = records.Skip(from).Where(r => r.T <= final.T && IsEvent(r, "missile_end") &&
+            r.Text("type") == MissileType && TryId(r.Fields, "missile_id", out uint id) && ids.Contains(id))
+            .Select(r => r.T).ToArray();
+        bool defenseProof = VerifyDisappearances(records, initial.T, final, initialIds, endTimes, out string defenseDetail);
         if (!(sample.Fields.TryGetValue("mods.dev.baanish.karambit.inbound_cruise_speed_mps", out object cruiseSpeed) &&
             cruiseSpeed is double speed && double.IsFinite(speed) && speed > 0 && speed <= BoatDefenseSpeedCeiling))
         {
@@ -98,8 +101,8 @@ public static class KarambitSalvo
         return new Reading(success, success ? 20 : -Math.Max(1, survivors), detail);
     }
 
-    private static bool OutsideBoatDefense(IReadOnlyList<TraceRecord> records, double initialTime, TraceRecord final,
-        IReadOnlyCollection<uint> initialIds, out string detail)
+    private static bool VerifyDisappearances(IReadOnlyList<TraceRecord> records, double initialTime, TraceRecord final,
+        IReadOnlyCollection<uint> initialIds, IReadOnlyCollection<double> endTimes, out string detail)
     {
         var failures = new List<string>();
         double minimumRange = double.PositiveInfinity;
@@ -133,6 +136,8 @@ public static class KarambitSalvo
                 continue;
             }
             double gap = (firstAbsent ?? final).T - lastSeen.T;
+            if (firstAbsent == null || !endTimes.Any(t => t >= lastSeen.T && t <= firstAbsent.T + 0.5))
+                failures.Add("inbound " + incomingId + " disappearance has no compatible Karambit end after its last sighting");
             // A capped gap is safe only if even 500 m/s closure leaves over 10 km
             // before the first complete snapshot proves the inbound absent.
             double lowerRange = range - BoatDefenseSpeedCeiling * gap;
@@ -145,7 +150,7 @@ public static class KarambitSalvo
         detail = failures.Count == 0 ? "all last inbound boat ranges >10 km after 500 m/s closure across truth gaps (minimum bound " +
             Format.Number(minimumRange) + " m, maximum gap " + Format.Number(maximumGap) + " s, oldest last sighting " +
             Format.Number(maximumAge) + " s before final snapshot)"
-            : "boat-defense exclusion unproved: " + string.Join("; ", failures);
+            : "disappearance proof failed: " + string.Join("; ", failures);
         return failures.Count == 0;
     }
 

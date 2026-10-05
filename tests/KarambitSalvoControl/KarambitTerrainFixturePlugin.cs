@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BepInEx;
+using NuclearOption.SavedMission;
 using UnityEngine;
 
 namespace Baanish.Karambit.SalvoTest;
@@ -14,6 +15,19 @@ public sealed class KarambitTerrainFixturePlugin : BaseUnityPlugin
     private float minimumClearance = float.PositiveInfinity, maximumGround;
     private bool crossed;
 
+    private void Awake() => MissionManager.onMissionLoad += ResetFixture;
+
+    private void ResetFixture(Mission? _)
+    {
+        if (ridge != null) Destroy(ridge);
+        if (data != null) Destroy(data);
+        ridge = null;
+        data = null;
+        minimumClearance = float.PositiveInfinity;
+        maximumGround = 0f;
+        crossed = false;
+    }
+
     private void FixedUpdate()
     {
         string? missionName = MissionManager.CurrentMission?.Name;
@@ -22,6 +36,9 @@ public sealed class KarambitTerrainFixturePlugin : BaseUnityPlugin
             return;
         if (ridge == null)
         {
+            minimumClearance = float.PositiveInfinity;
+            maximumGround = 0f;
+            crossed = false;
             if (narrow)
             {
                 ridge = new GameObject("Karambit 320 m narrow test obstacle") { isStatic = true };
@@ -76,7 +93,7 @@ public sealed class KarambitTerrainFixturePlugin : BaseUnityPlugin
 
     private void OnDestroy()
     {
-        if (ridge != null) Destroy(ridge);
-        if (data != null) Destroy(data);
+        MissionManager.onMissionLoad -= ResetFixture;
+        ResetFixture(MissionManager.CurrentMission);
     }
 }

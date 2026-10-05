@@ -30,6 +30,11 @@ function Assert-PlainPath([string]$Path) {
 foreach ($path in @($build, $missionSource, $destination, $missionDestination, $blueprinterEnabled, $blueprinterDisabled)) {
     Assert-PlainPath $path
 }
+foreach ($folder in @($destination, $missionDestination)) {
+    if (Test-Path -LiteralPath $folder) {
+        foreach ($file in Get-ChildItem -LiteralPath $folder -File -Force) { Assert-PlainPath $file.FullName }
+    }
+}
 if (Test-Path -LiteralPath $pluginsPath) {
     $destinationPrefix = [IO.Path]::TrimEndingDirectorySeparator([IO.Path]::GetFullPath($destination)) + [IO.Path]::DirectorySeparatorChar
     foreach ($file in Get-ChildItem -LiteralPath $pluginsPath -File -Recurse -Force) {
@@ -55,6 +60,7 @@ $missionFiles = @(Get-ChildItem -LiteralPath $missionSource -File)
 if ($missionFiles.Count -ne 2 -or 'meta.json' -cnotin $missionFiles.Name -or
     ($missionName + '.json') -cnotin $missionFiles.Name) { throw 'Generate the saved Karambit mission first.' }
 $receiptPath = Join-Path $build 'install-receipt.json'
+Assert-PlainPath $receiptPath
 if ($Update) {
     $previous = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
     if ($previous.prototype -ine $destination -or $previous.mission -ine $missionDestination) {

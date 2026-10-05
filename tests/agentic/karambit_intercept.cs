@@ -11,6 +11,9 @@ public static class KarambitIntercept
     private const string Telemetry = "mods.dev.baanish.karambit.missiles.";
     private const string TruthMissiles = "truth.missiles";
     private const double EvidenceWindowSeconds = 0.5;
+    // Allow closure between the final sample and detonation, without crediting distant self-destruction.
+    private const double TerminalRangeToleranceMeters = 20;
+    private const double MaximumClosingSpeedMetersPerSecond = 1500;
 
     public static Reading CruiseMachObserved(TraceRecord sample, ConditionScope scope, JsonElement args)
     {
@@ -82,8 +85,7 @@ public static class KarambitIntercept
         return false;
     }
 
-    // A proximity result is inferred from range alone. Require the launched
-    // missile's final locked target to vanish from a complete truth snapshot.
+    // Require compatible final separation and disappearance of the designated target.
     public static Reading LockedCruiseMissileDestroyed(TraceRecord sample, ConditionScope scope, JsonElement args)
     {
         string mark = args.GetProperty("since").GetString();
@@ -142,6 +144,10 @@ public static class KarambitIntercept
         if (targetId != designatedId)
             return new Reading(false, -1, "Karambit " + missileId + " locked target " + targetId + " instead of designated target " +
                 designatedId + " (greedy fallback; designated interception not proved)");
+        double maximumRange = TerminalRangeToleranceMeters + MaximumClosingSpeedMetersPerSecond * (end.T - telemetry.T);
+        if (!Number(telemetry, missilePath + ".range_m", out double range) || range < 0 || range > maximumRange)
+            return new Reading(false, -1, "Karambit " + missileId + " final separation is incompatible with interception; limit " +
+                Format.Number(maximumRange) + " m at the last lock sample");
 
         var before = PreviousRecord(records, endIndex, RecordKinds.Truth, end.T);
         if (before == null || end.T - before.T > EvidenceWindowSeconds || !CompleteMissiles(before, out var beforeMissiles))
